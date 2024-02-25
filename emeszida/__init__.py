@@ -69,7 +69,7 @@ class Sexagesimal(object):
 
     def __str__(self):
         # (mantissa, exponent) representation:
-        return self.digits
+        return str(self.digits)
         # decimal representation:
         # return str(sum(mantissa * 60**exponent for mantissa, exponent in self.digits))
 
