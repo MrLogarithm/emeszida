@@ -16,24 +16,31 @@ EmeszidaParser = Lark(r"""
           | TENS
           | ZERO
     
-    number: (digits* FRAC)? digits+ WS*
+    number: (digits* FRAC)? digits+
 
 
-    ?expr: add
+    ?expr: expr_ WS*
+
+    ?expr_: add
          | sub
-
-    add: number number "+"
-
-    sub: number number "-"
-
-
-    ?value: expr
          | number
+
+    add: expr expr "+"
+
+    sub: expr expr "-"
+
+
+    PRINT: "print"
+
+    print_stmt: expr PRINT
+
+    ?stmt: expr
+         | print_stmt
 
 
     %import common.WS
 
-    """, start='value', parser="lalr")
+    """, start='stmt', parser="lalr")
 
 class Sexagesimal(object):
     def __init__(self, digits):
@@ -148,4 +155,15 @@ class EmeszidaTransformer(Transformer):
     def sub(self, terms):
         a, b = terms
         return a - b
+
+    def expr_(self, _):
+        (_,) = _
+        return _
+    def expr(self, _):
+        (_,) = _
+        return _
+
+    def print_stmt(self, stmt):
+        expr, _ = stmt
+        print(expr)
 
