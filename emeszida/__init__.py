@@ -1,14 +1,23 @@
 from lark import Lark
 from lark import Transformer, Discard
 
+# TODO accept both GESH2 and DISH?
 EmeszidaParser = Lark(r"""
-    number: DIGITS* FRAC? DIGITS+ WS*
+    TENS: /[𒌋𒎙𒌍𒐏𒐐]/
+
+    ONES: /[𒐕𒐖𒐗𒐘𒐙𒐚𒐛𒐜𒐝]/
+
+    ZERO: "𒑱"
 
     FRAC: "𒋙"
 
-    DIGITS: "𒑱"? "𒌋"+ "𒐕"*
-          | "𒑱"? "𒌋"* "𒐕"+
-          | "𒑱"
+    digits: TENS ONES
+          | ONES
+          | TENS
+          | ZERO
+    
+    number: (digits* FRAC)? digits+ WS*
+
 
     ?expr: add
          | sub
@@ -17,12 +26,14 @@ EmeszidaParser = Lark(r"""
 
     sub: number number "-"
 
+
     ?value: expr
          | number
 
+
     %import common.WS
 
-    """, start='value')
+    """, start='value', parser="lalr")
 
 class Sexagesimal(object):
     def __init__(self, digits):
@@ -87,8 +98,45 @@ class EmeszidaTransformer(Transformer):
         value = Sexagesimal(list(zip(digits, exponents)))
         return value
 
-    def DIGITS(self, digits):
-        return digits.count("𒌋") * 10 + digits.count("𒐕")
+    def ZERO(self, _):
+        return 0
+
+    def ONES(self, token):
+        match token:
+            case "𒐕":
+                return 1
+            case "𒐖":
+                return 2
+            case "𒐗":
+                return 3
+            case "𒐘":
+                return 4
+            case "𒐙":
+                return 5
+            case "𒐚":
+                return 6
+            case "𒐛":
+                return 7
+            case "𒐜":
+                return 8
+            case "𒐝":
+                return 9
+
+    def TENS(self, token):
+        match token:
+            case "𒌋":
+                return 10
+            case "𒎙":
+                return 20
+            case "𒌍":
+                return 30
+            case "𒐏":
+                return 40
+            case "𒐐":
+                return 50
+
+    def digits(self, digits):
+        return sum(digits)
 
     def FRAC(self, _):
         return _.value
