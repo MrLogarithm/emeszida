@@ -45,6 +45,12 @@ class Sexagesimal(object):
         if carry:
             digits = [(carry, exponent + 1)] + digits
 
+        # trim empty positions
+        while digits[0][0] == 0 and digits[0][1] > 0:
+            digits = digits[1:]
+        while digits[-1][0] == 0 and digits[-1][1] < 0:
+            digits = digits[:-1]
+
         return digits
 
     def __eq__(self, other):
@@ -56,7 +62,9 @@ class Sexagesimal(object):
         return result
 
     def __sub__(self, other):
-        raise NotImplementedError()
+        a, b = Sexagesimal.zero_pad(self, other)
+        result = Sexagesimal([(a_mantissa - b_mantissa, exp) for (a_mantissa, exp), (b_mantissa, _) in zip(a, b)])
+        return result
 
     def __repr__(self):
         return str(self)

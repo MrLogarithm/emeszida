@@ -115,5 +115,23 @@ class TestNumerals(unittest.TestCase):
             value = t.transform(tree)
             self.assertEqual(value, expected_value)
 
+    def test_subtraction(self):
+        TEST_CASES = [
+            ("𒐕𒋙𒐕 𒋙𒐕𒌋𒐕 -", emeszida.Sexagesimal([(0, 0), (59, -1), (49, -2)])),
+            ("𒌍𒑱 𒌍𒑱 -", emeszida.Sexagesimal([(0, 0)])),
+            ("𒐐 𒌋 -", emeszida.Sexagesimal([(40, 0)])),
+            ("𒐐𒐕𒑱 𒐐𒑱 𒐕 + -", emeszida.Sexagesimal([(59, 0)])),
+            ("𒐕 𒋙𒑱𒑱𒑱𒑱𒐕 -", emeszida.Sexagesimal([(0, 0), (59, -1), (59, -2), (59, -3), (59, -4), (59, -5)])),
+            ("𒐐𒐝𒑱 𒐐𒐝 𒐕 - -", emeszida.Sexagesimal([(58, 1), (2, 0)])),
+            ("𒐐𒐝 𒐐 𒐝 + -", emeszida.Sexagesimal([(0, 0)])),
+            # Negatives?
+            # ("𒐕 𒌋𒐕 -", emeszida.Sexagesimal([(-10, 0)])),
+        ]
+
+        for string, expected_value in TEST_CASES:
+            tree = p.parse(string)
+            value = t.transform(tree)
+            self.assertEqual(value, expected_value)
+
 if __name__ == '__main__':
     unittest.main()
