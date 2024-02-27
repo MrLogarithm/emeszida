@@ -3,7 +3,7 @@ class Sexagesimal(object):
         """
         digits should be a list of (mantissa, exponent) tuples, e.g.
         [(2, 1), (0, 0), (3, -1)], representing 
-        2x60^1 + 0x60^0 + 3*60^-1 = 120.05 = 𒐕𒐕𒑱𒋙𒐕𒐕𒐕
+        2x60^1 + 0x60^0 + 3*60^-1 = 120.05 = 𒐖𒑱𒋙𒐗
         """
         self.digits = Sexagesimal.normalize(digits)
 
