@@ -1,6 +1,8 @@
 from lark import Lark
 from lark import Transformer, Discard
 
+from .sexagesimal import Sexagesimal
+
 # TODO accept both GESH2 and DISH?
 EmeszidaParser = Lark(r"""
     TENS: /[𒌋𒎙𒌍𒐏𒐐]/
@@ -42,54 +44,6 @@ EmeszidaParser = Lark(r"""
 
     """, start='stmt', parser="lalr")
 
-class Sexagesimal(object):
-    def __init__(self, digits):
-        """
-        digits should be a list of (mantissa, exponent) tuples, e.g.
-        [(2, 1), (0, 0), (3, -1)], representing 
-        2x60^1 + 0x60^0 + 3*60^-1 = 120.05 = 𒐕𒐕𒑱𒋙𒐕𒐕𒐕
-        """
-        self.digits = digits
-
-    def __eq__(self, other):
-        return self.digits == other.digits
-
-    def zero_pad(self, other):
-        """
-        Given another Sexagesimal object, zero-pad both so they
-        have the same number of significant digits:
-        """
-        a = self.digits
-        b = other.digits
-        # Prepend most significant digit:
-        while (a_max_exp := a[0][1]) < (b_max_exp := b[0][1]):
-            a = [(0, a_max_exp+1)] + a
-        while (a_max_exp := a[0][1]) > (b_max_exp := b[0][1]):
-            b = [(0, b_max_exp+1)] + b
-        # Append least significant digit:
-        while (a_min_exp := a[-1][1]) > (b_min_exp := b[-1][1]):
-            a = a + [(0, a_min_exp-1)]
-        while (a_min_exp := a[-1][1]) < (b_min_exp := b[-1][1]):
-            b = b + [(0, b_min_exp-1)]
-        return a, b
-
-    def __add__(self, other):
-        a, b = Sexagesimal.zero_pad(self, other)
-        # TODO carry in case of overflow
-        result = Sexagesimal([(a_mantissa + b_mantissa, exp) for (a_mantissa, exp), (b_mantissa, _) in zip(a, b)])
-        return result
-
-    def __sub__(self, other):
-        raise NotImplementedError()
-
-    def __repr__(self):
-        return str(self)
-
-    def __str__(self):
-        # (mantissa, exponent) representation:
-        return str(self.digits)
-        # decimal representation:
-        # return str(sum(mantissa * 60**exponent for mantissa, exponent in self.digits))
 
 class EmeszidaTransformer(Transformer):
     def WS(self, _):
