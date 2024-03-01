@@ -120,14 +120,14 @@ class TestNumerals(unittest.TestCase):
 
     def test_addition(self):
         TEST_CASES = [
-            #("𒋙𒐕𒌋𒐕 𒐕𒋙𒐕 +", emeszida.Sexagesimal([(1, 0), (2, -1), (11, -2)])),
+            ("𒋙𒐕𒌋𒐕 𒀀𒈾 𒐕𒋙𒐕 𒈭𒄩", emeszida.Sexagesimal([(1, 0), (2, -1), (11, -2)])),
             ## Carrying
-            #("𒌍𒑱 𒌍𒑱 +", emeszida.Sexagesimal([(1, 2), (0, 1), (0, 0)])),
-            #("𒐐 𒌋 +", emeszida.Sexagesimal([(1, 1), (0, 0)])),
-            #("𒐐𒐝 𒐕 +", emeszida.Sexagesimal([(1, 1), (0, 0)])),
-            #("𒐐𒐝 𒌋𒐕 +", emeszida.Sexagesimal([(1, 1), (10, 0)])),
-            #("𒐐𒐝𒑱 𒐐𒐝 𒐕 + +", emeszida.Sexagesimal([(1, 2), (0, 1), (0, 0)])),
-            #("𒐐𒐝𒑱 𒐐𒐝 + 𒐕 +", emeszida.Sexagesimal([(1, 2), (0, 1), (0, 0)])),
+            ("𒌍𒑱 𒀀𒈾 𒌍𒑱 𒈭𒄩", emeszida.Sexagesimal([(1, 2), (0, 1), (0, 0)])),
+            ("𒐐 𒀀𒈾 𒌋 𒈭𒄩", emeszida.Sexagesimal([(1, 1), (0, 0)])),
+            ("𒐐𒐝 𒀀𒈾 𒐕 𒈭𒄩", emeszida.Sexagesimal([(1, 1), (0, 0)])),
+            ("𒐐𒐝 𒀀𒈾 𒌋𒐕 𒈭𒄩", emeszida.Sexagesimal([(1, 1), (10, 0)])),
+            ("𒐐𒐝𒑱 𒀀𒈾 𒐐𒐝 𒀀𒈾 𒐕 𒈭𒄩  𒈭𒄩", emeszida.Sexagesimal([(1, 2), (0, 1), (0, 0)])),
+            ("𒐐𒐝𒑱 𒀀𒈾 𒐐𒐝 𒈭𒄩  𒀀𒈾 𒐕 𒈭𒄩", emeszida.Sexagesimal([(1, 2), (0, 1), (0, 0)])),
             ("𒌋𒐙 𒀀𒈾 𒐕 𒈭𒄩", emeszida.Sexagesimal([(16, 0)])),
         ]
 
@@ -141,7 +141,7 @@ class TestNumerals(unittest.TestCase):
             #("𒐕𒋙𒐕 𒋙𒐕𒌋𒐕 -", emeszida.Sexagesimal([(0, 0), (59, -1), (49, -2)])),
             #("𒌍𒑱 𒌍𒑱 -", emeszida.Sexagesimal([(0, 0)])),
             #("𒐐 𒌋 -", emeszida.Sexagesimal([(40, 0)])),
-            #("𒐐𒐕𒑱 𒐐𒑱 𒐕 + -", emeszida.Sexagesimal([(59, 0)])),
+            #("𒐐𒐕𒑱 𒐐𒑱 𒐕 𒈭𒄩 -", emeszida.Sexagesimal([(59, 0)])),
             #(
                 #"𒐕 𒋙𒑱𒑱𒑱𒑱𒐕 -",
                 #emeszida.Sexagesimal(
@@ -149,7 +149,7 @@ class TestNumerals(unittest.TestCase):
                 #),
             #),
             #("𒐐𒐝𒑱 𒐐𒐝 𒐕 - -", emeszida.Sexagesimal([(58, 1), (2, 0)])),
-            #("𒐐𒐝 𒐐 𒐝 + -", emeszida.Sexagesimal([(0, 0)])),
+            #("𒐐𒐝 𒐐 𒐝 𒈭𒄩 -", emeszida.Sexagesimal([(0, 0)])),
             ## Negatives?
             ### ("𒐕 𒌋𒐕 -", emeszida.Sexagesimal([(-10, 0)])),
         ]
