@@ -113,7 +113,7 @@ class EmeszidaTransformer(Transformer):
 
     def sub(self, terms):
         a, b = terms
-        return a - b
+        return b - a
 
     def expr_(self, _):
         (_,) = _

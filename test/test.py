@@ -138,20 +138,22 @@ class TestNumerals(unittest.TestCase):
 
     def test_subtraction(self):
         TEST_CASES = [
-            #("𒐕𒋙𒐕 𒋙𒐕𒌋𒐕 -", emeszida.Sexagesimal([(0, 0), (59, -1), (49, -2)])),
-            #("𒌍𒑱 𒌍𒑱 -", emeszida.Sexagesimal([(0, 0)])),
-            #("𒐐 𒌋 -", emeszida.Sexagesimal([(40, 0)])),
-            #("𒐐𒐕𒑱 𒐐𒑱 𒐕 𒈭𒄩 -", emeszida.Sexagesimal([(59, 0)])),
-            #(
-                #"𒐕 𒋙𒑱𒑱𒑱𒑱𒐕 -",
-                #emeszida.Sexagesimal(
-                    #[(0, 0), (59, -1), (59, -2), (59, -3), (59, -4), (59, -5)]
-                #),
-            #),
-            #("𒐐𒐝𒑱 𒐐𒐝 𒐕 - -", emeszida.Sexagesimal([(58, 1), (2, 0)])),
-            #("𒐐𒐝 𒐐 𒐝 𒈭𒄩 -", emeszida.Sexagesimal([(0, 0)])),
-            ## Negatives?
-            ### ("𒐕 𒌋𒐕 -", emeszida.Sexagesimal([(-10, 0)])),
+            ("𒐕𒐏 𒄿𒈾 𒎙𒐜𒎙 𒁀𒍣", emeszida.Sexagesimal([(26, 1), (40, 0)])),
+            ("𒋙𒐕𒌋𒐕 𒄿𒈾 𒐕𒋙𒐕 𒁀𒍣", emeszida.Sexagesimal([(0, 0), (59, -1), (49, -2)])),
+            ("𒌍𒑱 𒄿𒈾 𒌍𒑱 𒁀𒍣", emeszida.Sexagesimal([(0, 0)])),
+            ("𒌋 𒄿𒈾 𒐐 𒁀𒍣", emeszida.Sexagesimal([(40, 0)])),
+            ("𒐐𒑱 𒀀𒈾 𒐕 𒈭𒄩  𒄿𒈾 𒐐𒐕𒑱 𒁀𒍣", emeszida.Sexagesimal([(59, 0)])),
+            ("𒐐 𒐕 𒄿𒈾 𒐐𒐕𒑱 𒁀𒍣", emeszida.Sexagesimal([(59, 0)])),
+            (
+                "𒋙𒑱𒑱𒑱𒑱𒐕 𒄿𒈾 𒐕 𒁀𒍣",
+                emeszida.Sexagesimal(
+                    [(0, 0), (59, -1), (59, -2), (59, -3), (59, -4), (59, -5)]
+                    ),
+            ),
+            ("𒐕 𒄿𒈾 𒐐𒐝 𒁀𒍣  𒄿𒈾 𒐐𒐝𒑱 𒁀𒍣", emeszida.Sexagesimal([(58, 1), (2, 0)])),
+            ("𒐐 𒀀𒈾 𒐝 𒈭𒄩  𒄿𒈾 𒐐𒐝 𒁀𒍣", emeszida.Sexagesimal([(0, 0)])),
+            # Negatives?
+            # ("𒐕 𒌋𒐕 𒁀𒍣", emeszida.Sexagesimal([(-10, 0)])),
         ]
 
         for string, expected_value in TEST_CASES:
