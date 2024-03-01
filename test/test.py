@@ -104,6 +104,13 @@ class TestNumerals(unittest.TestCase):
             ("𒐕𒐕𒌋", emeszida.Sexagesimal([(1, 2), (1, 1), (10, 0)])),
             ("𒐖𒌋", emeszida.Sexagesimal([(2, 1), (10, 0)])),
             ("𒌋𒑱𒌋𒐕", emeszida.Sexagesimal([(10, 2), (0, 1), (11, 0)])),
+            # Spaces
+            ("𒌋𒐕", emeszida.Sexagesimal([(11, 0)])),
+            ("𒌋 𒐕", emeszida.Sexagesimal([(10, 1), (1, 0)])),
+            ("𒌋𒌋𒐕", emeszida.Sexagesimal([(10, 1), (11, 0)])),
+            ("𒌋 𒌋𒐕", emeszida.Sexagesimal([(10, 1), (11, 0)])),
+            ("𒌋 𒌋 𒐕", emeszida.Sexagesimal([(10, 2), (10, 1), (1, 0)])),
+            ("𒌋𒌋 𒐕",  emeszida.Sexagesimal([(10, 2), (10, 1), (1, 0)])),
         ]
 
         for string, expected_value in TEST_CASES:
@@ -121,7 +128,7 @@ class TestNumerals(unittest.TestCase):
             #("𒐐𒐝 𒌋𒐕 +", emeszida.Sexagesimal([(1, 1), (10, 0)])),
             #("𒐐𒐝𒑱 𒐐𒐝 𒐕 + +", emeszida.Sexagesimal([(1, 2), (0, 1), (0, 0)])),
             #("𒐐𒐝𒑱 𒐐𒐝 + 𒐕 +", emeszida.Sexagesimal([(1, 2), (0, 1), (0, 0)])),
-            ("𒌋𒐙 𒀀𒈾𒐕 𒈭𒄩", emeszida.Sexagesimal([(16, 0)])),
+            ("𒌋𒐙 𒀀𒈾 𒐕 𒈭𒄩", emeszida.Sexagesimal([(16, 0)])),
         ]
 
         for string, expected_value in TEST_CASES:

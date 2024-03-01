@@ -13,23 +13,23 @@ EmeszidaParser = Lark(r"""
 
     FRAC: "𒋙"
 
+    SPACE: " "
+
     digits: TENS ONES
           | ONES
           | TENS
           | ZERO
+          | SPACE
     
     number: (digits* FRAC)? digits+
 
-
-    ?expr: expr_ WS*
-
-    ?expr_: add
+    ?expr: add
          | sub
          | number
 
     add: expr "𒀀𒈾" expr "𒈭𒄩"
 
-    sub: expr expr "-"
+    sub: expr "𒄿𒈾" expr "𒁀𒍣"
 
 
     PRINT: "print"
@@ -39,8 +39,8 @@ EmeszidaParser = Lark(r"""
     ?stmt: expr
          | print_stmt
 
-
     %import common.WS
+    %ignore "  "
 
     """, start='stmt', parser="lalr")
 
@@ -96,11 +96,16 @@ class EmeszidaTransformer(Transformer):
             case "𒐐":
                 return 50
 
-    def digits(self, digits):
-        return sum(digits)
-
     def FRAC(self, _):
         return _.value
+
+    def SPACE(self, _):
+        return Discard
+
+    def digits(self, digits):
+        if digits != []:
+            return sum(digits)
+        return Discard
 
     def add(self, terms):
         a, b = terms
