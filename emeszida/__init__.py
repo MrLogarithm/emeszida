@@ -23,6 +23,8 @@ EmeszidaParser = Lark(r"""
     
     number: (digits* FRAC)? digits+
 
+
+
     ?expr: add
          | sub
          | number
@@ -32,11 +34,21 @@ EmeszidaParser = Lark(r"""
     sub: expr "𒄿𒈾" expr "𒁀𒍣"
 
 
+
+    ?expression_stmt: expr
+
+    VARIABLE: /[a-z]+/
+
+    assignment_stmt: VARIABLE "=" expr
+
+
     PRINT: "print"
 
     print_stmt: expr PRINT
 
-    ?stmt: expr
+
+    ?stmt: expression_stmt
+         | assignment_stmt
          | print_stmt
 
     %import common.WS
@@ -121,6 +133,14 @@ class EmeszidaTransformer(Transformer):
     def expr(self, _):
         (_,) = _
         return _
+
+    def VARIABLE(self, _):
+        return _.value
+
+    #def assignment_stmt(self, stmt):
+        # TODO get current scope and store value
+        #variable, expr = stmt
+        #print(variable, expr)
 
     def print_stmt(self, stmt):
         expr, _ = stmt
