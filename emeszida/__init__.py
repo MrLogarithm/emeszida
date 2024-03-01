@@ -27,12 +27,16 @@ EmeszidaParser = Lark(r"""
 
     ?expr: add
          | sub
+         | mul
          | number
+         // | VARIABLE
+         // | function_call
 
     add: expr "𒀀𒈾" expr "𒈭𒄩"
 
     sub: expr "𒄿𒈾" expr "𒁀𒍣"
 
+    mul: expr "𒀀𒁺" expr
 
 
     ?expression_stmt: expr
@@ -41,6 +45,8 @@ EmeszidaParser = Lark(r"""
 
     assignment_stmt: VARIABLE "=" expr
 
+    // loop_stmt: "do" block "until" condition 
+    // function_def_stmt: "do" block "until" condition 
 
     PRINT: "print"
 
@@ -126,6 +132,10 @@ class EmeszidaTransformer(Transformer):
     def sub(self, terms):
         a, b = terms
         return b - a
+
+    def mul(self, terms):
+        a, b = terms
+        return a * b
 
     def expr_(self, _):
         (_,) = _

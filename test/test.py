@@ -161,6 +161,19 @@ class TestNumerals(unittest.TestCase):
             value = t.transform(tree)
             self.assertEqual(value, expected_value)
 
+    def test_multiplication(self):
+        TEST_CASES = [
+            ("𒐕𒐏 𒀀𒁺 𒎙𒐜𒎙", emeszida.Sexagesimal([(47, 2), (13, 1), (20, 0)])),
+            ("𒐕 𒀀𒁺 𒎙𒐜𒎙", emeszida.Sexagesimal([(28, 1), (20, 0)])),
+            ("𒎙 𒀀𒁺 𒐗", emeszida.Sexagesimal([(1, 1), (0, 0)])),
+            ("𒌋𒐘𒌍 𒀀𒁺 𒌋𒐘𒌍", emeszida.Sexagesimal([(3, 3), (30, 2), (15, 1), (0, 0)])),
+        ]
+
+        for string, expected_value in TEST_CASES:
+            tree = p.parse(string)
+            value = t.transform(tree)
+            self.assertEqual(value, expected_value)
+
 
 if __name__ == "__main__":
     unittest.main()

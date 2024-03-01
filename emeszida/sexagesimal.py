@@ -32,14 +32,13 @@ class Sexagesimal(object):
             mantissa, exponent = digits[idx]
             if carry:
                 mantissa += carry
-            if mantissa >= 60:
-                mantissa -= 60
-                carry = 1
-            elif mantissa < 0:
-                mantissa += 60
-                carry = -1
-            else:
                 carry = 0
+            while mantissa >= 60:
+                mantissa -= 60
+                carry += 1
+            while mantissa < 0:
+                mantissa += 60
+                carry -= 1
             digits[idx] = (mantissa, exponent)
 
         if carry:
@@ -76,6 +75,18 @@ class Sexagesimal(object):
         )
         return result
 
+    def __mul__(self, other):
+        terms = []
+        for mantissa, exponent in other.digits:
+            term = []
+            for m, e in self.digits:
+                term += [(m*mantissa, exponent+e)]
+            for idx in range(exponent):
+                term += [(0, idx)]
+            terms.append(Sexagesimal(term))
+        result = sum(terms, Sexagesimal([(0, 0)]))
+        return Sexagesimal(result.digits)
+
     def __repr__(self):
         return str(self)
 
@@ -84,13 +95,15 @@ class Sexagesimal(object):
         # return str(self.digits)
         # decimal representation:
         # return str(sum(mantissa * 60**exponent for mantissa, exponent in self.digits))
-        string = ','.join([
-                str(mantissa)
-                for mantissa, exponent in self.digits 
-                if exponent >= 0
-            ]) + ';' + ','.join([
-                str(mantissa)
-                for mantissa, exponent in self.digits 
-                if exponent < 0
-            ]).rstrip(';')
+        string = (
+                ','.join([
+                    str(mantissa)
+                    for mantissa, exponent in self.digits 
+                    if exponent >= 0
+                ]) + ';' + ','.join([
+                    str(mantissa)
+                    for mantissa, exponent in self.digits 
+                    if exponent < 0
+                ])
+            ).rstrip(';')
         return string
