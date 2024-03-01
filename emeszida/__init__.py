@@ -27,7 +27,7 @@ EmeszidaParser = Lark(r"""
          | sub
          | number
 
-    add: expr expr "+"
+    add: expr "𒀀𒈾" expr "𒈭𒄩"
 
     sub: expr expr "-"
 
