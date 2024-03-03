@@ -27,6 +27,11 @@ class Sexagesimal(object):
         return a, b
 
     def normalize(digits):
+        while digits[0][1] < 0:
+            digits = [(0, digits[0][1] + 1)] + digits
+        while digits[-1][1] > 0:
+            digits = digits + [(0, digits[-1][1] - 1)]
+
         carry = 0
         for idx in range(len(digits) - 1, -1, -1):
             mantissa, exponent = digits[idx]
@@ -51,6 +56,48 @@ class Sexagesimal(object):
             digits = digits[:-1]
 
         return digits
+
+    def __gt__(self, other, idx=0):
+        m1, e1 = self.digits[idx]
+        m2, e2 = other.digits[idx]
+        if e1 > e2 or (m1 > m2 and e1 == e2):
+            return True
+        elif e1 == e2 and m1 == m2:
+            if idx + 1 < len(self.digits) and idx + 1 < len(other.digits):
+                return self.__gt__(other, idx=idx + 1)
+            elif idx + 1 < len(self.digits):
+                return True
+            else:
+                return False
+        return False
+
+    def reciprocal(self):
+        result = []
+        exponent = 0
+
+        N = Sexagesimal(self.digits)
+
+        dividend = Sexagesimal([(1, 0)])
+        while dividend != Sexagesimal([(0, 0)]):
+            if N > dividend:
+                dividend = dividend * Sexagesimal([(1, 1)])
+                result.append((0, exponent))
+                exponent -= 1
+            else:
+                quotient = Sexagesimal([(1, 0)])
+                while dividend > quotient * N:
+                    quotient += Sexagesimal([(1, 0)])
+                if quotient * N > dividend:
+                    quotient -= Sexagesimal([(1, 0)])
+                remainder = dividend - (quotient * N)
+                for m, e in quotient.digits:
+                    result.append((m, exponent+e))
+                exponent -= 1
+                dividend = remainder
+                # TODO if we have already seen this remainder, break and autofill repeated digits
+            if exponent < -10:
+                break
+        return Sexagesimal(result)
 
     def __eq__(self, other):
         return self.digits == other.digits
