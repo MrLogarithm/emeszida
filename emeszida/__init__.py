@@ -28,9 +28,11 @@ EmeszidaParser = Lark(r"""
     ?expr: add
          | sub
          | mul
+         | recip
          | number
-         // | VARIABLE
-         // | function_call
+         | NAME
+         | function_call
+         | "(" expr ")"
 
     add: expr "𒀀𒈾" expr "𒈭𒄩"
 
@@ -38,29 +40,38 @@ EmeszidaParser = Lark(r"""
 
     mul: expr "𒀀𒁺" expr
 
+    recip: "𒅆" expr
+
+    function_call: "𒍦" (expr "𒅇")* expr? "𒍧" NAME "do"
+
 
     ?expression_stmt: expr
 
-    VARIABLE: /[a-z]+/
+    NAME: /[a-z]+/
 
-    assignment_stmt: VARIABLE "=" expr
+    assignment_stmt: NAME "=" expr
 
-    // loop_stmt: "do" block "until" condition 
-    // function_def_stmt: "do" block "until" condition 
+    loop_stmt: "loop" block "until" expr
 
-    PRINT: "print"
+    function_def_stmt: NAME "func" NAME* "take" block "def"
 
-    print_stmt: expr PRINT
+    print_stmt: expr "print"
 
+
+    block: "𒍦" stmt* "𒍧"
+
+    ?stmts: stmt*
 
     ?stmt: expression_stmt
          | assignment_stmt
+         | loop_stmt
+         | function_def_stmt
          | print_stmt
 
     %import common.WS
     %ignore "  "
 
-    """, start='stmt', parser="lalr")
+    """, start='stmts', parser="lalr")
 
 
 class EmeszidaTransformer(Transformer):
@@ -137,6 +148,10 @@ class EmeszidaTransformer(Transformer):
         a, b = terms
         return a * b
 
+    def recip(self, term):
+        (term,) = term
+        return term.reciprocal()
+
     def expr_(self, _):
         (_,) = _
         return _
@@ -144,7 +159,7 @@ class EmeszidaTransformer(Transformer):
         (_,) = _
         return _
 
-    def VARIABLE(self, _):
+    def NAME(self, _):
         return _.value
 
     #def assignment_stmt(self, stmt):
@@ -152,7 +167,6 @@ class EmeszidaTransformer(Transformer):
         #variable, expr = stmt
         #print(variable, expr)
 
-    def print_stmt(self, stmt):
-        expr, _ = stmt
-        print(expr)
+    #def print_stmt(self, expr):
+        #print(expr)
 
