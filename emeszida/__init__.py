@@ -20,7 +20,6 @@ EmeszidaParser = Lark(r"""
     
     number: (digits* FRAC)? digits+
 
-
     ?expr: expr_ WS*
 
     ?expr_: add
@@ -28,9 +27,8 @@ EmeszidaParser = Lark(r"""
          | number
 
     add: expr "𒀀𒈾" expr "𒈭𒄩"
-
-    sub: expr expr "-"
-
+                      
+    sub: expr "𒄿𒈾" expr "𒁀𒍣"
 
     PRINT: "print"
 

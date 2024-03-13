@@ -151,6 +151,17 @@ class TestNumerals(unittest.TestCase):
             tree = p.parse(string)
             value = t.transform(tree)
             self.assertEqual(value, expected_value)
+    
+    def test_sequence(self):
+        TEST_CASES = [
+            # "3000 to 1 add, from 3060 subtract = 59"
+            ("𒐐𒑱 𒀀𒈾 𒐕 𒈭𒄩 𒄿𒈾 𒐐𒐕𒑱 𒁀𒍣", emeszida.Sexagesimal([(59,0)])),
+        ]
+
+        for string, expected_value in TEST_CASES:
+            tree = p.parse(string)
+            value = t.transform(tree)
+            self.assertEqual(value, expected_value)
 
 
 if __name__ == "__main__":
