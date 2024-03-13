@@ -27,19 +27,23 @@ class Sexagesimal(object):
         return a, b
 
     def normalize(digits):
+        while digits[0][1] < 0:
+            digits = [(0, digits[0][1] + 1)] + digits
+        while digits[-1][1] > 0:
+            digits = digits + [(0, digits[-1][1] - 1)]
+
         carry = 0
         for idx in range(len(digits) - 1, -1, -1):
             mantissa, exponent = digits[idx]
             if carry:
                 mantissa += carry
-            if mantissa >= 60:
-                mantissa -= 60
-                carry = 1
-            elif mantissa < 0:
-                mantissa += 60
-                carry = -1
-            else:
                 carry = 0
+            while mantissa >= 60:
+                mantissa -= 60
+                carry += 1
+            while mantissa < 0:
+                mantissa += 60
+                carry -= 1
             digits[idx] = (mantissa, exponent)
 
         if carry:
@@ -52,6 +56,48 @@ class Sexagesimal(object):
             digits = digits[:-1]
 
         return digits
+
+    def __gt__(self, other, idx=0):
+        m1, e1 = self.digits[idx]
+        m2, e2 = other.digits[idx]
+        if e1 > e2 or (m1 > m2 and e1 == e2):
+            return True
+        elif e1 == e2 and m1 == m2:
+            if idx + 1 < len(self.digits) and idx + 1 < len(other.digits):
+                return self.__gt__(other, idx=idx + 1)
+            elif idx + 1 < len(self.digits):
+                return True
+            else:
+                return False
+        return False
+
+    def reciprocal(self):
+        result = []
+        exponent = 0
+
+        N = Sexagesimal(self.digits)
+
+        dividend = Sexagesimal([(1, 0)])
+        while dividend != Sexagesimal([(0, 0)]):
+            if N > dividend:
+                dividend = dividend * Sexagesimal([(1, 1)])
+                result.append((0, exponent))
+                exponent -= 1
+            else:
+                quotient = Sexagesimal([(1, 0)])
+                while dividend > quotient * N:
+                    quotient += Sexagesimal([(1, 0)])
+                if quotient * N > dividend:
+                    quotient -= Sexagesimal([(1, 0)])
+                remainder = dividend - (quotient * N)
+                for m, e in quotient.digits:
+                    result.append((m, exponent+e))
+                exponent -= 1
+                dividend = remainder
+                # TODO if we have already seen this remainder, break and autofill repeated digits
+            if exponent < -10:
+                break
+        return Sexagesimal(result)
 
     def __eq__(self, other):
         return self.digits == other.digits
@@ -76,11 +122,35 @@ class Sexagesimal(object):
         )
         return result
 
+    def __mul__(self, other):
+        terms = []
+        for mantissa, exponent in other.digits:
+            term = []
+            for m, e in self.digits:
+                term += [(m*mantissa, exponent+e)]
+            for idx in range(exponent):
+                term += [(0, idx)]
+            terms.append(Sexagesimal(term))
+        result = sum(terms, Sexagesimal([(0, 0)]))
+        return Sexagesimal(result.digits)
+
     def __repr__(self):
         return str(self)
 
     def __str__(self):
         # (mantissa, exponent) representation:
-        return str(self.digits)
+        # return str(self.digits)
         # decimal representation:
         # return str(sum(mantissa * 60**exponent for mantissa, exponent in self.digits))
+        string = (
+                ','.join([
+                    str(mantissa)
+                    for mantissa, exponent in self.digits 
+                    if exponent >= 0
+                ]) + ';' + ','.join([
+                    str(mantissa)
+                    for mantissa, exponent in self.digits 
+                    if exponent < 0
+                ])
+            ).rstrip(';')
+        return string

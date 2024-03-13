@@ -104,6 +104,13 @@ class TestNumerals(unittest.TestCase):
             ("𒐕𒐕𒌋", emeszida.Sexagesimal([(1, 2), (1, 1), (10, 0)])),
             ("𒐖𒌋", emeszida.Sexagesimal([(2, 1), (10, 0)])),
             ("𒌋𒑱𒌋𒐕", emeszida.Sexagesimal([(10, 2), (0, 1), (11, 0)])),
+            # Spaces
+            ("𒌋𒐕", emeszida.Sexagesimal([(11, 0)])),
+            ("𒌋 𒐕", emeszida.Sexagesimal([(10, 1), (1, 0)])),
+            ("𒌋𒌋𒐕", emeszida.Sexagesimal([(10, 1), (11, 0)])),
+            ("𒌋 𒌋𒐕", emeszida.Sexagesimal([(10, 1), (11, 0)])),
+            ("𒌋 𒌋 𒐕", emeszida.Sexagesimal([(10, 2), (10, 1), (1, 0)])),
+            ("𒌋𒌋 𒐕",  emeszida.Sexagesimal([(10, 2), (10, 1), (1, 0)])),
         ]
 
         for string, expected_value in TEST_CASES:
@@ -113,15 +120,15 @@ class TestNumerals(unittest.TestCase):
 
     def test_addition(self):
         TEST_CASES = [
-            #("𒋙𒐕𒌋𒐕 𒐕𒋙𒐕 +", emeszida.Sexagesimal([(1, 0), (2, -1), (11, -2)])),
+            ("𒋙𒐕𒌋𒐕 𒀀𒈾 𒐕𒋙𒐕 𒈭𒄩", emeszida.Sexagesimal([(1, 0), (2, -1), (11, -2)])),
             ## Carrying
-            #("𒌍𒑱 𒌍𒑱 +", emeszida.Sexagesimal([(1, 2), (0, 1), (0, 0)])),
-            #("𒐐 𒌋 +", emeszida.Sexagesimal([(1, 1), (0, 0)])),
-            #("𒐐𒐝 𒐕 +", emeszida.Sexagesimal([(1, 1), (0, 0)])),
-            #("𒐐𒐝 𒌋𒐕 +", emeszida.Sexagesimal([(1, 1), (10, 0)])),
-            #("𒐐𒐝𒑱 𒐐𒐝 𒐕 + +", emeszida.Sexagesimal([(1, 2), (0, 1), (0, 0)])),
-            #("𒐐𒐝𒑱 𒐐𒐝 + 𒐕 +", emeszida.Sexagesimal([(1, 2), (0, 1), (0, 0)])),
-            ("𒌋𒐙 𒀀𒈾𒐕 𒈭𒄩", emeszida.Sexagesimal([(16, 0)])),
+            ("𒌍𒑱 𒀀𒈾 𒌍𒑱 𒈭𒄩", emeszida.Sexagesimal([(1, 2), (0, 1), (0, 0)])),
+            ("𒐐 𒀀𒈾 𒌋 𒈭𒄩", emeszida.Sexagesimal([(1, 1), (0, 0)])),
+            ("𒐐𒐝 𒀀𒈾 𒐕 𒈭𒄩", emeszida.Sexagesimal([(1, 1), (0, 0)])),
+            ("𒐐𒐝 𒀀𒈾 𒌋𒐕 𒈭𒄩", emeszida.Sexagesimal([(1, 1), (10, 0)])),
+            ("𒐐𒐝𒑱 𒀀𒈾 𒐐𒐝 𒀀𒈾 𒐕 𒈭𒄩  𒈭𒄩", emeszida.Sexagesimal([(1, 2), (0, 1), (0, 0)])),
+            ("𒐐𒐝𒑱 𒀀𒈾 𒐐𒐝 𒈭𒄩  𒀀𒈾 𒐕 𒈭𒄩", emeszida.Sexagesimal([(1, 2), (0, 1), (0, 0)])),
+            ("𒌋𒐙 𒀀𒈾 𒐕 𒈭𒄩", emeszida.Sexagesimal([(16, 0)])),
         ]
 
         for string, expected_value in TEST_CASES:
@@ -131,20 +138,77 @@ class TestNumerals(unittest.TestCase):
 
     def test_subtraction(self):
         TEST_CASES = [
-            #("𒐕𒋙𒐕 𒋙𒐕𒌋𒐕 -", emeszida.Sexagesimal([(0, 0), (59, -1), (49, -2)])),
-            #("𒌍𒑱 𒌍𒑱 -", emeszida.Sexagesimal([(0, 0)])),
-            #("𒐐 𒌋 -", emeszida.Sexagesimal([(40, 0)])),
-            #("𒐐𒐕𒑱 𒐐𒑱 𒐕 + -", emeszida.Sexagesimal([(59, 0)])),
-            #(
-                #"𒐕 𒋙𒑱𒑱𒑱𒑱𒐕 -",
-                #emeszida.Sexagesimal(
-                    #[(0, 0), (59, -1), (59, -2), (59, -3), (59, -4), (59, -5)]
-                #),
-            #),
-            #("𒐐𒐝𒑱 𒐐𒐝 𒐕 - -", emeszida.Sexagesimal([(58, 1), (2, 0)])),
-            #("𒐐𒐝 𒐐 𒐝 + -", emeszida.Sexagesimal([(0, 0)])),
-            ## Negatives?
-            ### ("𒐕 𒌋𒐕 -", emeszida.Sexagesimal([(-10, 0)])),
+            ("𒐕𒐏 𒄿𒈾 𒎙𒐜𒎙 𒁀𒍣", emeszida.Sexagesimal([(26, 1), (40, 0)])),
+            ("𒋙𒐕𒌋𒐕 𒄿𒈾 𒐕𒋙𒐕 𒁀𒍣", emeszida.Sexagesimal([(0, 0), (59, -1), (49, -2)])),
+            ("𒌍𒑱 𒄿𒈾 𒌍𒑱 𒁀𒍣", emeszida.Sexagesimal([(0, 0)])),
+            ("𒌋 𒄿𒈾 𒐐 𒁀𒍣", emeszida.Sexagesimal([(40, 0)])),
+            ("𒐐𒑱 𒀀𒈾 𒐕 𒈭𒄩  𒄿𒈾 𒐐𒐕𒑱 𒁀𒍣", emeszida.Sexagesimal([(59, 0)])),
+            ("𒐐 𒐕 𒄿𒈾 𒐐𒐕𒑱 𒁀𒍣", emeszida.Sexagesimal([(59, 0)])),
+            (
+                "𒋙𒑱𒑱𒑱𒑱𒐕 𒄿𒈾 𒐕 𒁀𒍣",
+                emeszida.Sexagesimal(
+                    [(0, 0), (59, -1), (59, -2), (59, -3), (59, -4), (59, -5)]
+                    ),
+            ),
+            ("𒐕 𒄿𒈾 𒐐𒐝 𒁀𒍣  𒄿𒈾 𒐐𒐝𒑱 𒁀𒍣", emeszida.Sexagesimal([(58, 1), (2, 0)])),
+            ("𒐐 𒀀𒈾 𒐝 𒈭𒄩  𒄿𒈾 𒐐𒐝 𒁀𒍣", emeszida.Sexagesimal([(0, 0)])),
+            # Negatives?
+            # ("𒐕 𒌋𒐕 𒁀𒍣", emeszida.Sexagesimal([(-10, 0)])),
+        ]
+
+        for string, expected_value in TEST_CASES:
+            tree = p.parse(string)
+            value = t.transform(tree)
+            self.assertEqual(value, expected_value)
+
+    def test_multiplication(self):
+        TEST_CASES = [
+            ("𒐕𒐏 𒀀𒁺 𒎙𒐜𒎙", emeszida.Sexagesimal([(47, 2), (13, 1), (20, 0)])),
+            ("𒐕 𒀀𒁺 𒎙𒐜𒎙", emeszida.Sexagesimal([(28, 1), (20, 0)])),
+            ("𒎙 𒀀𒁺 𒐗", emeszida.Sexagesimal([(1, 1), (0, 0)])),
+            ("𒌋𒐘𒌍 𒀀𒁺 𒌋𒐘𒌍", emeszida.Sexagesimal([(3, 3), (30, 2), (15, 1), (0, 0)])),
+            ("𒐕 𒀀𒁺 𒋙𒑱𒑱𒌋", emeszida.Sexagesimal([(0, 0), (0, -1), (0, -2), (10, -3)])),
+        ]
+
+        for string, expected_value in TEST_CASES:
+            tree = p.parse(string)
+            value = t.transform(tree)
+            self.assertEqual(value, expected_value)
+
+    def test_gt(self):
+        TEST_CASES = [
+            (emeszida.Sexagesimal([(2, 0)]) > emeszida.Sexagesimal([(1,0)]), True),
+            (emeszida.Sexagesimal([(2, 0)]) < emeszida.Sexagesimal([(1,0)]), False),
+            (emeszida.Sexagesimal([(1, 1)]) > emeszida.Sexagesimal([(2,0)]), True),
+            (emeszida.Sexagesimal([(1, 1)]) < emeszida.Sexagesimal([(2,0)]), False),
+            (emeszida.Sexagesimal([(1, 1), (0, 0)]) > emeszida.Sexagesimal([(59, 0)]), True),
+            (emeszida.Sexagesimal([(1, 1), (0, 0)]) < emeszida.Sexagesimal([(59, 0)]), False),
+            (emeszida.Sexagesimal([(1, 1), (0, 0)]) > emeszida.Sexagesimal([(60, 0)]), False),
+            (emeszida.Sexagesimal([(1, 1), (0, 0)]) < emeszida.Sexagesimal([(60, 0)]), False),
+            (emeszida.Sexagesimal([(1, 1), (5, 0)]) > emeszida.Sexagesimal([(1 ,1), (2, 0)]), True),
+            (emeszida.Sexagesimal([(1, 1), (5, 0)]) < emeszida.Sexagesimal([(1 ,1), (2, 0)]), False),
+            (emeszida.Sexagesimal([(0, 0), (1, -1)]) > emeszida.Sexagesimal([(0, 0), (0, -1), (1, -2)]), True),
+            (emeszida.Sexagesimal([(0, 0), (1, -1)]) < emeszida.Sexagesimal([(0, 0), (0, -1), (1, -2)]), False),
+            (emeszida.Sexagesimal([(0, 0), (1, -1)]) > emeszida.Sexagesimal([(0, 0), (2, -1), (1, -2)]), False),
+            (emeszida.Sexagesimal([(0, 0), (1, -1)]) < emeszida.Sexagesimal([(0, 0), (2, -1), (1, -2)]), True),
+        ]
+
+        for value, expected_value in TEST_CASES:
+            self.assertEqual(value, expected_value)
+
+    def test_reciprocal(self):
+        TEST_CASES = [
+            ("𒅆 𒐕", emeszida.Sexagesimal([(1, 0)])),
+            ("𒅆 𒐛𒌍", emeszida.Sexagesimal([(0, 0), (0, -1), (8, -2)])),
+            ("𒅆 𒌋𒐙", emeszida.Sexagesimal([(0, 0), (4, -1)])),
+            ("𒅆 𒌋𒐙𒑱", emeszida.Sexagesimal([(0, 0), (0, -1), (4, -2)])),
+            ("𒅆 𒌋", emeszida.Sexagesimal([(0, 0), (6, -1)])),
+            ("𒅆 𒋙𒌋", emeszida.Sexagesimal([(6, 0)])),
+            ("𒅆 𒋙𒑱𒑱𒌋", emeszida.Sexagesimal([(6, 2), (0, 1), (0, 0)])),
+            ("𒅆 𒐛𒋙𒌍", emeszida.Sexagesimal([(0, 0), (8, -1)])),
+            ("(  𒅆  𒐖  )  𒀀𒁺  𒌋", emeszida.Sexagesimal([(5, 0)])),
+            # Non-Terminating
+            ("𒅆 𒐛", emeszida.Sexagesimal([(0, 0), (8, -1), (0, -2), (34, -3), (0, -4), (17, -5), (0, -6), (8, -7), (0, -8), (34, -9), (0, -10)])),
         ]
 
         for string, expected_value in TEST_CASES:

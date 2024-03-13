@@ -13,34 +13,63 @@ EmeszidaParser = Lark(r"""
 
     FRAC: "𒋙"
 
+    SPACE: " "
+
     digits: TENS ONES
           | ONES
           | TENS
           | ZERO
+          | SPACE
     
     number: (digits* FRAC)? digits+
 
-    ?expr: expr_ WS*
-
-    ?expr_: add
+    ?expr: add
          | sub
+         | mul
+         | recip
          | number
+         | NAME
+         | function_call
+         | "(" expr ")"
 
     add: expr "𒀀𒈾" expr "𒈭𒄩"
-                      
+
     sub: expr "𒄿𒈾" expr "𒁀𒍣"
 
-    PRINT: "print"
+    mul: expr "𒀀𒁺" expr
 
-    print_stmt: expr PRINT
+    recip: "𒅆" expr
 
-    ?stmt: expr
+    function_call: "𒍦" (expr "𒅇")* expr? "𒍧" NAME "do"
+
+
+    ?expression_stmt: expr
+
+    NAME: /[a-z]+/
+
+    assignment_stmt: NAME "=" expr
+
+    loop_stmt: "loop" block "until" expr
+
+    function_def_stmt: NAME "func" NAME* "take" block "def"
+
+    print_stmt: expr "print"
+
+
+    block: "𒍦" stmt* "𒍧"
+
+    ?stmts: stmt*
+
+    ?stmt: expression_stmt
+         | assignment_stmt
+         | loop_stmt
+         | function_def_stmt
          | print_stmt
 
-
     %import common.WS
+    %ignore "  "
 
-    """, start='stmt', parser="lalr")
+    """, start='stmts', parser="lalr")
 
 
 class EmeszidaTransformer(Transformer):
@@ -94,11 +123,16 @@ class EmeszidaTransformer(Transformer):
             case "𒐐":
                 return 50
 
-    def digits(self, digits):
-        return sum(digits)
-
     def FRAC(self, _):
         return _.value
+
+    def SPACE(self, _):
+        return Discard
+
+    def digits(self, digits):
+        if digits != []:
+            return sum(digits)
+        return Discard
 
     def add(self, terms):
         a, b = terms
@@ -106,7 +140,15 @@ class EmeszidaTransformer(Transformer):
 
     def sub(self, terms):
         a, b = terms
-        return a - b
+        return b - a
+
+    def mul(self, terms):
+        a, b = terms
+        return a * b
+
+    def recip(self, term):
+        (term,) = term
+        return term.reciprocal()
 
     def expr_(self, _):
         (_,) = _
@@ -115,7 +157,14 @@ class EmeszidaTransformer(Transformer):
         (_,) = _
         return _
 
-    def print_stmt(self, stmt):
-        expr, _ = stmt
-        print(expr)
+    def NAME(self, _):
+        return _.value
+
+    #def assignment_stmt(self, stmt):
+        # TODO get current scope and store value
+        #variable, expr = stmt
+        #print(variable, expr)
+
+    #def print_stmt(self, expr):
+        #print(expr)
 
