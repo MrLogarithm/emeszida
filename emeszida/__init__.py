@@ -23,7 +23,7 @@ EmeszidaParser = Lark(r"""
 
     number: (digits* FRAC)? digits+
 
-    register: "𒃻𒋃" number "𒄰"
+    register: "𒃻𒋃" expr "𒄰"
 
     OPCODE: "𒈭𒄩" // add
           | "𒁀𒍣" // subtract
@@ -100,7 +100,10 @@ class EmeszidaTransformer(Transformer):
 
     def register(self, value):
         (value,) = value
-        return Register(tuple(value.digits))
+        if isinstance(value, Register):
+            return Register(value)
+        else:
+            return Register(tuple(value.digits))
 
     def EMPTY_REGISTER(self, value):
         return None

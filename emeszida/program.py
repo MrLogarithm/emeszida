@@ -15,25 +15,45 @@ class Program(object):
     def __str__(self):
         return str(self.lines)
 
+    def dereference(self, register):
+        if isinstance(register, Sexagesimal):
+            return tuple(register.digits)
+
+        depth = 0
+        address = register.address
+        while isinstance(address, Register):
+            address = address.address
+            depth += 1
+        result = self.registers[address]
+        while depth > 0:
+            result = self.registers[tuple(result.digits)]
+            depth -= 1
+        return result
+
     def execute(self):
         line_number = 0
         while line_number < len(self.lines):
             stmt = self.lines[line_number]
             print(f"Executing {line_number}: {stmt}")
-            result = stmt.execute(self.registers)
+            result = stmt.execute(self)
             if stmt.opcode == "𒇔𒈾": # Goto
-                line_number = self.line_lookup[result]
+                if isinstance(result, Register):
+                    result = self.dereference(result.address)
+                line_number = self.line_lookup[tuple(result.digits)]
             elif stmt.opcode == "jz": # jz
                 if result:
-                    print("JZ", result)
                     if isinstance(result, Register):
-                        result = self.registers[result.address]
+                        result = self.dereference(result.address)
                     line_number = self.line_lookup[tuple(result.digits)]
                 else:
                     line_number += 1
             else:
                 if stmt.destination != None:
-                    self.registers[stmt.destination.address] = result
+                    dest = stmt.destination.address
+                    if isinstance(dest, Register):
+                        dest = self.dereference(dest)
+                        dest = tuple(dest.digits)
+                    self.registers[dest] = result
                 line_number += 1
             print("Registers:")
             for address, value in self.registers.items():
@@ -93,7 +113,7 @@ class Statement(object):
         # Goto
         assert len(arg) == 1
         (arg,) = arg
-        return tuple(arg.digits)
+        return arg
 
     def jz(self, arg):
         # Jump if zero
@@ -105,7 +125,7 @@ class Statement(object):
     def execute(self, context):
         method = getattr(self, self.opcode)
         inputs = [
-            context[arg.address] 
+            context.dereference(arg)
             if isinstance(arg, Register) 
             else arg 
             for arg in self.args
