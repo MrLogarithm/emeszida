@@ -124,24 +124,6 @@ class TestNumerals(unittest.TestCase):
             value = t.transform(tree)
             self.assertEqual(value, expected_value)
 
-    def test_addition(self):
-        TEST_CASES = [
-            ("𒋙𒐕𒌋𒐕 𒀀𒈾 𒐕𒋙𒐕 𒈭𒄩", emeszida.Sexagesimal([(1, 0), (2, -1), (11, -2)])),
-            ## Carrying
-            ("𒌍𒑱 𒀀𒈾 𒌍𒑱 𒈭𒄩", emeszida.Sexagesimal([(1, 2), (0, 1), (0, 0)])),
-            ("𒐐 𒀀𒈾 𒌋 𒈭𒄩", emeszida.Sexagesimal([(1, 1), (0, 0)])),
-            ("𒐐𒐝 𒀀𒈾 𒐕 𒈭𒄩", emeszida.Sexagesimal([(1, 1), (0, 0)])),
-            ("𒐐𒐝 𒀀𒈾 𒌋𒐕 𒈭𒄩", emeszida.Sexagesimal([(1, 1), (10, 0)])),
-            ("𒐐𒐝𒑱 𒀀𒈾 𒐐𒐝 𒀀𒈾 𒐕 𒈭𒄩  𒈭𒄩", emeszida.Sexagesimal([(1, 2), (0, 1), (0, 0)])),
-            ("𒐐𒐝𒑱 𒀀𒈾 𒐐𒐝 𒈭𒄩  𒀀𒈾 𒐕 𒈭𒄩", emeszida.Sexagesimal([(1, 2), (0, 1), (0, 0)])),
-            ("𒌋𒐙 𒀀𒈾 𒐕 𒈭𒄩", emeszida.Sexagesimal([(16, 0)])),
-        ]
-
-        for string, expected_value in TEST_CASES:
-            tree = p.parse(string)
-            value = t.transform(tree)
-            self.assertEqual(value, expected_value)
-
     def test_subtraction(self):
         TEST_CASES = [
             ("𒐕𒐏 𒄿𒈾 𒎙𒐜𒎙 𒁀𒍣", emeszida.Sexagesimal([(26, 1), (40, 0)])),
@@ -419,6 +401,26 @@ class TestNumerals(unittest.TestCase):
 
         for value, expected_value in TEST_CASES:
             self.assertEqual(value, expected_value)
+
+    def test_addition(self):
+        TEST_CASES = [
+            ("𒋙𒐕𒌋𒐕𒀀𒈾𒐕𒋙𒐕	𒈭𒄩	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal([(1, 0), (2, -1), (11, -2)])}),
+            ## Carrying
+            ("𒌍𒑱𒀀𒈾𒌍𒑱	𒈭𒄩	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal([(1, 2), (0, 1), (0, 0)])}),
+            ("𒐐𒀀𒈾𒌋	𒈭𒄩	𒃻𒋃𒐕𒄰	𒐕",     {((1,0),): Sexagesimal([(1, 1), (0, 0)])}),
+            ("𒐐𒐝𒀀𒈾𒐕	𒈭𒄩	𒃻𒋃𒐕𒄰	𒐕",     {((1,0),): Sexagesimal([(1, 1), (0, 0)])}),
+            ("𒐐𒐝𒀀𒈾𒌋𒐕	𒈭𒄩	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal([(1, 1), (10, 0)])}),
+            ("𒌋𒐙𒀀𒈾𒐕	𒈭𒄩	𒃻𒋃𒐕𒄰	𒐕",     {((1,0),): Sexagesimal([(16, 0)])}),
+            ("𒐐𒐝𒑱𒀀𒈾𒐐𒐝	𒈭𒄩	𒃻𒋃𒐕𒄰	𒐕\n𒃻𒋃𒐕𒄰𒀀𒈾𒐕	𒈭𒄩	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal([(1, 2), (0, 1), (0, 0)])}),
+            ("𒐐𒐝𒑱𒀀𒈾𒐐𒐝	𒈭𒄩	𒃻𒋃𒐕𒄰	𒐕\n𒐕𒀀𒈾𒃻𒋃𒐕𒄰	𒈭𒄩	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal([(1, 2), (0, 1), (0, 0)])}),
+        ]
+
+        for string, expected_value in TEST_CASES:
+            tree = p.parse(TEMPLATE.format(string))
+            program = t.transform(tree)
+            program.execute()
+            for register, value in expected_value.items():
+                self.assertEqual(program.registers[register], value)
 
 
 if __name__ == "__main__":
