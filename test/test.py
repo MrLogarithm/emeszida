@@ -123,37 +123,6 @@ class TestNumerals(unittest.TestCase):
             tree = p.parse(string)
             value = t.transform(tree)
             self.assertEqual(value, expected_value)
-
-    def test_reciprocal(self):
-        TEST_CASES = [
-            ("𒅆 𒐕", emeszida.Sexagesimal([(1, 0)])),
-            ("𒅆 𒐛𒌍", emeszida.Sexagesimal([(0, 0), (0, -1), (8, -2)])),
-            ("𒅆 𒌋𒐙", emeszida.Sexagesimal([(0, 0), (4, -1)])),
-            ("𒅆 𒌋𒐙𒑱", emeszida.Sexagesimal([(0, 0), (0, -1), (4, -2)])),
-            ("𒅆 𒌋", emeszida.Sexagesimal([(0, 0), (6, -1)])),
-            ("𒅆 𒋙𒌋", emeszida.Sexagesimal([(6, 0)])),
-            ("𒅆 𒋙𒑱𒑱𒌋", emeszida.Sexagesimal([(6, 2), (0, 1), (0, 0)])),
-            ("𒅆 𒐛𒋙𒌍", emeszida.Sexagesimal([(0, 0), (8, -1)])),
-            ("(  𒅆  𒐖  )  𒀀𒁺  𒌋", emeszida.Sexagesimal([(5, 0)])),
-            # Non-Terminating
-            ("𒅆 𒐛", emeszida.Sexagesimal([(0, 0), (8, -1), (0, -2), (34, -3), (0, -4), (17, -5), (0, -6), (8, -7), (0, -8), (34, -9), (0, -10)])),
-        ]
-
-        for string, expected_value in TEST_CASES:
-            tree = p.parse(string)
-            value = t.transform(tree)
-            self.assertEqual(value, expected_value)
-    
-    def test_sequence(self):
-        TEST_CASES = [
-            # "3000 to 1 add, from 3060 subtract = 59"
-            ("𒐐𒑱  𒀀𒈾  𒐕  𒈭𒄩  𒄿𒈾  𒐐𒐕𒑱  𒁀𒍣", emeszida.Sexagesimal([(59,0)])),
-        ]
-
-        for string, expected_value in TEST_CASES:
-            tree = p.parse(string)
-            value = t.transform(tree)
-            self.assertEqual(value, expected_value)
     """
     def test_negatives(self):
         TEST_CASES = [
@@ -424,6 +393,42 @@ class TestNumerals(unittest.TestCase):
             for register, value in expected_value.items():
                 self.assertEqual(program.registers[register], value)
 
+    def test_reciprocal(self):
+        TEST_CASES = [
+            ("𒐕	𒅆	𒃻𒋃𒐕𒄰	𒐕",     {((1,0),): Sexagesimal([(1, 0)])}),
+            ("𒐛𒌍	𒅆	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal([(0, 0), (0, -1), (8, -2)])}),
+            ("𒌋𒐙	𒅆	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal([(0, 0), (4, -1)])}),
+            ("𒌋𒐙𒑱	𒅆	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal([(0, 0), (0, -1), (4, -2)])}),
+            ("𒌋	𒅆	𒃻𒋃𒐕𒄰	𒐕",     {((1,0),): Sexagesimal([(0, 0), (6, -1)])}),
+            ("𒋙𒌋	𒅆	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal([(6, 0)])}),
+            ("𒋙𒑱𒑱𒌋	𒅆	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal([(6, 2), (0, 1), (0, 0)])}),
+            ("𒐛𒋙𒌍	𒅆	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal([(0, 0), (8, -1)])}),
+            ("𒐖	𒅆	𒃻𒋃𒐕𒄰	𒐕\n𒃻𒋃𒐕𒄰  𒌋	𒀀𒁺	𒃻𒋃𒐕𒄰	𒐕",  
+                {((1,0),): Sexagesimal([(5, 0)])}),
+            # Non-Terminating
+            ("𒐛	𒅆	𒃻𒋃𒐕𒄰	𒐕",     {((1,0),): Sexagesimal("0;8,0,34,0,17,0,8,0,34")}),
+        ]
+
+        for string, expected_value in TEST_CASES:
+            tree = p.parse(TEMPLATE.format(string))
+            program = t.transform(tree)
+            program.execute()
+            for register, value in expected_value.items():
+                self.assertEqual(program.registers[register], value)
+
+    def test_sequence(self):
+        TEST_CASES = [
+            # "3000 to 1 add, from 3060 subtract = 59"
+            ("𒐐𒑱𒀀𒈾𒐕	𒈭𒄩	𒃻𒋃𒐕𒄰	𒐕\n𒃻𒋃𒐕𒄰𒄿𒈾𒐐𒐕𒑱	𒁀𒍣	𒃻𒋃𒐕𒄰	𒐕", 
+                {((1,0),): Sexagesimal([(59,0)])}),
+        ]
+
+        for string, expected_value in TEST_CASES:
+            tree = p.parse(TEMPLATE.format(string))
+            program = t.transform(tree)
+            program.execute()
+            for register, value in expected_value.items():
+                self.assertEqual(program.registers[register], value)
 
 if __name__ == "__main__":
     unittest.main()
