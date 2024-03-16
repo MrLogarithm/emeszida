@@ -85,6 +85,14 @@ class Sexagesimal(object):
         return digits, sign
 
     def __gt__(self, other, idx=0):
+        if self.sign == 1 and other.sign == -1:
+            return True
+        elif self.sign == -1 and other.sign == 1:
+            return False
+        elif self.sign == -1 and other.sign == -1:
+            return Sexagesimal(self.digits, sign=1) < Sexagesimal(other.digits, sign=1)
+
+
         m1, e1 = self.digits[idx]
         m2, e2 = other.digits[idx]
         if e1 > e2 or (m1 > m2 and e1 == e2):
@@ -95,6 +103,7 @@ class Sexagesimal(object):
             elif idx + 1 < len(self.digits):
                 return True
             else:
+                # Equal
                 return False
         return False
 

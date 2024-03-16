@@ -181,27 +181,6 @@ class TestNumerals(unittest.TestCase):
             value = t.transform(tree)
             self.assertEqual(value, expected_value)
 
-    def test_gt(self):
-        TEST_CASES = [
-            (emeszida.Sexagesimal([(2, 0)]) > emeszida.Sexagesimal([(1,0)]), True),
-            (emeszida.Sexagesimal([(2, 0)]) < emeszida.Sexagesimal([(1,0)]), False),
-            (emeszida.Sexagesimal([(1, 1)]) > emeszida.Sexagesimal([(2,0)]), True),
-            (emeszida.Sexagesimal([(1, 1)]) < emeszida.Sexagesimal([(2,0)]), False),
-            (emeszida.Sexagesimal([(1, 1), (0, 0)]) > emeszida.Sexagesimal([(59, 0)]), True),
-            (emeszida.Sexagesimal([(1, 1), (0, 0)]) < emeszida.Sexagesimal([(59, 0)]), False),
-            (emeszida.Sexagesimal([(1, 1), (0, 0)]) > emeszida.Sexagesimal([(60, 0)]), False),
-            (emeszida.Sexagesimal([(1, 1), (0, 0)]) < emeszida.Sexagesimal([(60, 0)]), False),
-            (emeszida.Sexagesimal([(1, 1), (5, 0)]) > emeszida.Sexagesimal([(1 ,1), (2, 0)]), True),
-            (emeszida.Sexagesimal([(1, 1), (5, 0)]) < emeszida.Sexagesimal([(1 ,1), (2, 0)]), False),
-            (emeszida.Sexagesimal([(0, 0), (1, -1)]) > emeszida.Sexagesimal([(0, 0), (0, -1), (1, -2)]), True),
-            (emeszida.Sexagesimal([(0, 0), (1, -1)]) < emeszida.Sexagesimal([(0, 0), (0, -1), (1, -2)]), False),
-            (emeszida.Sexagesimal([(0, 0), (1, -1)]) > emeszida.Sexagesimal([(0, 0), (2, -1), (1, -2)]), False),
-            (emeszida.Sexagesimal([(0, 0), (1, -1)]) < emeszida.Sexagesimal([(0, 0), (2, -1), (1, -2)]), True),
-        ]
-
-        for value, expected_value in TEST_CASES:
-            self.assertEqual(value, expected_value)
-
     def test_reciprocal(self):
         TEST_CASES = [
             ("𒅆 𒐕", emeszida.Sexagesimal([(1, 0)])),
@@ -404,6 +383,43 @@ class TestNumerals(unittest.TestCase):
             program.execute()
             for register, value in expected_value.items():
                 self.assertEqual(program.registers[register], value)
+
+    def test_gt(self):
+        TEST_CASES = [
+            (emeszida.Sexagesimal([(2, 0)]) > emeszida.Sexagesimal([(1,0)]), True),
+            (emeszida.Sexagesimal([(2, 0)]) < emeszida.Sexagesimal([(1,0)]), False),
+            (emeszida.Sexagesimal([(1, 1)]) > emeszida.Sexagesimal([(2,0)]), True),
+            (emeszida.Sexagesimal([(1, 1)]) < emeszida.Sexagesimal([(2,0)]), False),
+            (emeszida.Sexagesimal([(1, 1), (0, 0)]) > emeszida.Sexagesimal([(59, 0)]), True),
+            (emeszida.Sexagesimal([(1, 1), (0, 0)]) < emeszida.Sexagesimal([(59, 0)]), False),
+            (emeszida.Sexagesimal([(1, 1), (0, 0)]) > emeszida.Sexagesimal([(60, 0)]), False),
+            (emeszida.Sexagesimal([(1, 1), (0, 0)]) < emeszida.Sexagesimal([(60, 0)]), False),
+            (emeszida.Sexagesimal([(1, 1), (5, 0)]) > emeszida.Sexagesimal([(1 ,1), (2, 0)]), True),
+            (emeszida.Sexagesimal([(1, 1), (5, 0)]) < emeszida.Sexagesimal([(1 ,1), (2, 0)]), False),
+            (emeszida.Sexagesimal([(0, 0), (1, -1)]) > emeszida.Sexagesimal([(0, 0), (0, -1), (1, -2)]), True),
+            (emeszida.Sexagesimal([(0, 0), (1, -1)]) < emeszida.Sexagesimal([(0, 0), (0, -1), (1, -2)]), False),
+            (emeszida.Sexagesimal([(0, 0), (1, -1)]) > emeszida.Sexagesimal([(0, 0), (2, -1), (1, -2)]), False),
+            (emeszida.Sexagesimal([(0, 0), (1, -1)]) < emeszida.Sexagesimal([(0, 0), (2, -1), (1, -2)]), True),
+            (emeszida.Sexagesimal("-2") < emeszida.Sexagesimal("1"), True),
+            (emeszida.Sexagesimal("-2") < emeszida.Sexagesimal("2"), True),
+            (emeszida.Sexagesimal("-2") < emeszida.Sexagesimal("3"), True),
+            (emeszida.Sexagesimal("-2") > emeszida.Sexagesimal("1"), False),
+            (emeszida.Sexagesimal("-2") > emeszida.Sexagesimal("2"), False),
+            (emeszida.Sexagesimal("-2") > emeszida.Sexagesimal("3"), False),
+            (emeszida.Sexagesimal("-2") < emeszida.Sexagesimal("-1"), True),
+            (emeszida.Sexagesimal("-2") < emeszida.Sexagesimal("-10"), False),
+            (emeszida.Sexagesimal("-2") < emeszida.Sexagesimal("-2"), False),
+            (emeszida.Sexagesimal("-2") > emeszida.Sexagesimal("-2"), False),
+            (emeszida.Sexagesimal("2") < emeszida.Sexagesimal("2"), False),
+            (emeszida.Sexagesimal("2") > emeszida.Sexagesimal("2"), False),
+            (emeszida.Sexagesimal("-2") < emeszida.Sexagesimal("1;5"), True),
+            (emeszida.Sexagesimal("-2;5") < emeszida.Sexagesimal("1;5"), True),
+            (emeszida.Sexagesimal("-2;5") < emeszida.Sexagesimal("-2"), True),
+        ]
+
+        for value, expected_value in TEST_CASES:
+            self.assertEqual(value, expected_value)
+
 
 if __name__ == "__main__":
     unittest.main()
