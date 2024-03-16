@@ -124,31 +124,6 @@ class TestNumerals(unittest.TestCase):
             value = t.transform(tree)
             self.assertEqual(value, expected_value)
 
-    def test_subtraction(self):
-        TEST_CASES = [
-            ("𒐕𒐏 𒄿𒈾 𒎙𒐜𒎙 𒁀𒍣", emeszida.Sexagesimal([(26, 1), (40, 0)])),
-            ("𒋙𒐕𒌋𒐕 𒄿𒈾 𒐕𒋙𒐕 𒁀𒍣", emeszida.Sexagesimal([(0, 0), (59, -1), (49, -2)])),
-            ("𒌍𒑱 𒄿𒈾 𒌍𒑱 𒁀𒍣", emeszida.Sexagesimal([(0, 0)])),
-            ("𒌋 𒄿𒈾 𒐐 𒁀𒍣", emeszida.Sexagesimal([(40, 0)])),
-            ("𒐐𒑱 𒀀𒈾 𒐕 𒈭𒄩  𒄿𒈾 𒐐𒐕𒑱 𒁀𒍣", emeszida.Sexagesimal([(59, 0)])),
-            ("𒐐 𒐕 𒄿𒈾 𒐐𒐕𒑱 𒁀𒍣", emeszida.Sexagesimal([(59, 0)])),
-            (
-                "𒋙𒑱𒑱𒑱𒑱𒐕 𒄿𒈾 𒐕 𒁀𒍣",
-                emeszida.Sexagesimal(
-                    [(0, 0), (59, -1), (59, -2), (59, -3), (59, -4), (59, -5)]
-                    ),
-            ),
-            ("𒐕 𒄿𒈾 𒐐𒐝 𒁀𒍣  𒄿𒈾 𒐐𒐝𒑱 𒁀𒍣", emeszida.Sexagesimal([(58, 1), (2, 0)])),
-            ("𒐐 𒀀𒈾 𒐝 𒈭𒄩  𒄿𒈾 𒐐𒐝 𒁀𒍣", emeszida.Sexagesimal([(0, 0)])),
-            # Negatives?
-            # ("𒐕 𒌋𒐕 𒁀𒍣", emeszida.Sexagesimal([(-10, 0)])),
-        ]
-
-        for string, expected_value in TEST_CASES:
-            tree = p.parse(string)
-            value = t.transform(tree)
-            self.assertEqual(value, expected_value)
-
     def test_reciprocal(self):
         TEST_CASES = [
             ("𒅆 𒐕", emeszida.Sexagesimal([(1, 0)])),
@@ -415,6 +390,31 @@ class TestNumerals(unittest.TestCase):
             ("𒎙  𒐗	𒀀𒁺	𒃻𒋃𒐕𒄰	𒐕",     {((1,0),): Sexagesimal([(1, 1), (0, 0)])}),
             ("𒌋𒐘𒌍  𒌋𒐘𒌍	𒀀𒁺	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal([(3, 3), (30, 2), (15, 1), (0, 0)])}),
             ("𒐕  𒋙𒑱𒑱𒌋	𒀀𒁺	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal([(0, 0), (0, -1), (0, -2), (10, -3)])}),
+        ]
+
+        for string, expected_value in TEST_CASES:
+            tree = p.parse(TEMPLATE.format(string))
+            program = t.transform(tree)
+            program.execute()
+            for register, value in expected_value.items():
+                self.assertEqual(program.registers[register], value)
+
+    def test_subtraction(self):
+        TEST_CASES = [
+            ("𒐕𒐏𒄿𒈾𒎙𒐜𒎙	𒁀𒍣	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal([(26, 1), (40, 0)])}),
+            ("𒋙𒐕𒌋𒐕𒄿𒈾𒐕𒋙𒐕	𒁀𒍣	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal([(0, 0), (59, -1), (49, -2)])}),
+            ("𒌍𒑱𒄿𒈾𒌍𒑱	𒁀𒍣	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal([(0, 0)])}),
+            ("𒌋𒄿𒈾𒐐	𒁀𒍣	𒃻𒋃𒐕𒄰	𒐕",     {((1,0),): Sexagesimal([(40, 0)])}),
+            ("𒐐 𒐕𒄿𒈾𒐐𒐕𒑱	𒁀𒍣	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal([(59, 0)])}),
+            ("𒋙𒑱𒑱𒑱𒑱𒐕𒄿𒈾𒐕	𒁀𒍣	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal("0;59,59,59,59,59")}),
+            ("𒐐𒑱𒀀𒈾𒐕	𒈭𒄩	𒃻𒋃𒐕𒄰	𒐕\n𒃻𒋃𒐕𒄰𒄿𒈾𒐐𒐕𒑱	𒁀𒍣	𒃻𒋃𒐕𒄰	𒐕", 
+                {((1,0),): Sexagesimal([(59, 0)])}),
+            ("𒐕𒄿𒈾𒐐𒐝	𒁀𒍣	𒃻𒋃𒐕𒄰	𒐕\n𒃻𒋃𒐕𒄰𒄿𒈾𒐐𒐝𒑱	𒁀𒍣	𒃻𒋃𒐕𒄰	𒐕", 
+                {((1,0),): Sexagesimal([(58, 1), (2, 0)])}),
+            ("𒐐𒀀𒈾𒐝	𒈭𒄩	𒃻𒋃𒐕𒄰	𒐕\n𒃻𒋃𒐕𒄰𒄿𒈾𒐐𒐝	𒁀𒍣	𒃻𒋃𒐕𒄰	𒐕", 
+                {((1,0),): Sexagesimal([(0, 0)])}),
+            # Negatives
+            ("𒌋𒐕  𒐕	𒁀𒍣	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal("-10")}),
         ]
 
         for string, expected_value in TEST_CASES:
