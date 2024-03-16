@@ -149,20 +149,6 @@ class TestNumerals(unittest.TestCase):
             value = t.transform(tree)
             self.assertEqual(value, expected_value)
 
-    def test_multiplication(self):
-        TEST_CASES = [
-            ("𒐕𒐏 𒀀𒁺 𒎙𒐜𒎙", emeszida.Sexagesimal([(47, 2), (13, 1), (20, 0)])),
-            ("𒐕 𒀀𒁺 𒎙𒐜𒎙", emeszida.Sexagesimal([(28, 1), (20, 0)])),
-            ("𒎙 𒀀𒁺 𒐗", emeszida.Sexagesimal([(1, 1), (0, 0)])),
-            ("𒌋𒐘𒌍 𒀀𒁺 𒌋𒐘𒌍", emeszida.Sexagesimal([(3, 3), (30, 2), (15, 1), (0, 0)])),
-            ("𒐕 𒀀𒁺 𒋙𒑱𒑱𒌋", emeszida.Sexagesimal([(0, 0), (0, -1), (0, -2), (10, -3)])),
-        ]
-
-        for string, expected_value in TEST_CASES:
-            tree = p.parse(string)
-            value = t.transform(tree)
-            self.assertEqual(value, expected_value)
-
     def test_reciprocal(self):
         TEST_CASES = [
             ("𒅆 𒐕", emeszida.Sexagesimal([(1, 0)])),
@@ -413,6 +399,22 @@ class TestNumerals(unittest.TestCase):
             ("𒌋𒐙𒀀𒈾𒐕	𒈭𒄩	𒃻𒋃𒐕𒄰	𒐕",     {((1,0),): Sexagesimal([(16, 0)])}),
             ("𒐐𒐝𒑱𒀀𒈾𒐐𒐝	𒈭𒄩	𒃻𒋃𒐕𒄰	𒐕\n𒃻𒋃𒐕𒄰𒀀𒈾𒐕	𒈭𒄩	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal([(1, 2), (0, 1), (0, 0)])}),
             ("𒐐𒐝𒑱𒀀𒈾𒐐𒐝	𒈭𒄩	𒃻𒋃𒐕𒄰	𒐕\n𒐕𒀀𒈾𒃻𒋃𒐕𒄰	𒈭𒄩	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal([(1, 2), (0, 1), (0, 0)])}),
+        ]
+
+        for string, expected_value in TEST_CASES:
+            tree = p.parse(TEMPLATE.format(string))
+            program = t.transform(tree)
+            program.execute()
+            for register, value in expected_value.items():
+                self.assertEqual(program.registers[register], value)
+
+    def test_multiplication(self):
+        TEST_CASES = [
+            ("𒐕𒐏  𒎙𒐜𒎙	𒀀𒁺	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal([(47, 2), (13, 1), (20, 0)])}),
+            ("𒐕  𒎙𒐜𒎙	𒀀𒁺	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal([(28, 1), (20, 0)])}),
+            ("𒎙  𒐗	𒀀𒁺	𒃻𒋃𒐕𒄰	𒐕",     {((1,0),): Sexagesimal([(1, 1), (0, 0)])}),
+            ("𒌋𒐘𒌍  𒌋𒐘𒌍	𒀀𒁺	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal([(3, 3), (30, 2), (15, 1), (0, 0)])}),
+            ("𒐕  𒋙𒑱𒑱𒌋	𒀀𒁺	𒃻𒋃𒐕𒄰	𒐕", {((1,0),): Sexagesimal([(0, 0), (0, -1), (0, -2), (10, -3)])}),
         ]
 
         for string, expected_value in TEST_CASES:
