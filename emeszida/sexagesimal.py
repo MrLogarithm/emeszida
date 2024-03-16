@@ -1,11 +1,32 @@
 class Sexagesimal(object):
-    def __init__(self, digits):
+    def __init__(self, digits, sign=None):
         """
         digits should be a list of (mantissa, exponent) tuples, e.g.
         [(2, 1), (0, 0), (3, -1)], representing
         2x60^1 + 0x60^0 + 3*60^-1 = 120.05 = 𒐖𒑱𒋙𒐗
         """
-        self.digits = Sexagesimal.normalize(digits)
+        if isinstance(digits, list):
+            self.digits, self.sign = Sexagesimal.normalize(digits)
+        else:
+            if digits[0] == "-":
+                self.sign = -1
+                digits = digits[1:]
+            else:
+                self.sign = 1
+            if ";" in digits:
+                integer, fraction = digits.split(";")
+                integer = integer.split(",")
+                fraction = fraction.split(",")
+            else:
+                integer = digits.split(",")
+                fraction = []
+            self.digits = []
+            for exponent, digit in enumerate(integer[::-1]):
+                self.digits = [(int(digit), exponent)] + self.digits
+            for exponent, digit in enumerate(fraction):
+                self.digits = self.digits + [(int(digit), -exponent-1)]
+        if sign:
+            self.sign = sign
 
     def zero_pad(self, other):
         """
@@ -41,7 +62,7 @@ class Sexagesimal(object):
             while mantissa >= 60:
                 mantissa -= 60
                 carry += 1
-            while mantissa < 0:
+            while mantissa < 0 and idx != 0:
                 mantissa += 60
                 carry -= 1
             digits[idx] = (mantissa, exponent)
@@ -55,10 +76,13 @@ class Sexagesimal(object):
         while digits[-1][0] == 0 and digits[-1][1] < 0:
             digits = digits[:-1]
 
-        if digits[0][0] < 0:
-            raise Exception("Negative numbers have not been invented yet.")
+        sign = -1 if digits[0][0] < 0 else 1
+        if sign == -1:
+            digits[0] = (-digits[0][0], digits[0][1])
 
-        return digits
+        #raise Exception("Negative numbers have not been invented yet.")
+
+        return digits, sign
 
     def __gt__(self, other, idx=0):
         m1, e1 = self.digits[idx]
@@ -100,12 +124,16 @@ class Sexagesimal(object):
                 # TODO if we have already seen this remainder, break and autofill repeated digits
             if exponent < -10:
                 break
-        return Sexagesimal(result)
+        return Sexagesimal(result, sign=self.sign)
 
     def __eq__(self, other):
-        return self.digits == other.digits
+        return self.digits == other.digits and self.sign == other.sign
 
     def __add__(self, other):
+        if self.sign == 1 and other.sign == -1:
+            return self - Sexagesimal(other.digits, sign=1)
+        if self.sign == -1 and other.sign == 1:
+            return other - Sexagesimal(self.digits, sign=1)
         a, b = Sexagesimal.zero_pad(self, other)
         result = Sexagesimal(
             [
@@ -113,9 +141,16 @@ class Sexagesimal(object):
                 for (a_mantissa, exp), (b_mantissa, _) in zip(a, b)
             ]
         )
+        if self.sign == -1 and other.sign == -1:
+            result.sign = -1
         return result
 
     def __sub__(self, other):
+        if other.sign == -1:
+            return self + Sexagesimal(other.digits, sign=1)
+        if other > self:
+            return Sexagesimal((other - self).digits, -1)
+
         a, b = Sexagesimal.zero_pad(self, other)
         result = Sexagesimal(
             [
@@ -135,7 +170,7 @@ class Sexagesimal(object):
                 term += [(0, idx)]
             terms.append(Sexagesimal(term))
         result = sum(terms, Sexagesimal([(0, 0)]))
-        return Sexagesimal(result.digits)
+        return Sexagesimal(result.digits, self.sign * other.sign)
 
     def __repr__(self):
         return str(self)
@@ -156,4 +191,6 @@ class Sexagesimal(object):
                     if exponent < 0
                 ])
             ).rstrip(';')
+        if self.sign == -1:
+            string = f"-{string}"
         return string
