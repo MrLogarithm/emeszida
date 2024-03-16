@@ -10,6 +10,7 @@ EmeszidaParser = Lark(r"""
     block: stmt* "---" "\n"
 
     stmt: args TAB+ OPCODE TAB+ destination TAB+ line_number "\n"
+        | "#" /[^\n]/* "\n" -> comment
 
     args: expr (DELIM? expr)*
 
@@ -169,6 +170,9 @@ class EmeszidaTransformer(Transformer):
     
     ############################
     # Whitespace and delimiters:
+
+    def comment(self, _):
+        return Discard
 
     def TAB(self, _):
         return Discard

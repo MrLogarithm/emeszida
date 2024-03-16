@@ -42,6 +42,8 @@ class Program(object):
             elif stmt.opcode == "jz": # jz
                 if result:
                     result = self.dereference(result)
+                    if isinstance(result, Sexagesimal):
+                        result = self.dereference(result)
                     line_number = self.line_lookup[result]
                 else:
                     line_number += 1
