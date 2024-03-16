@@ -1,7 +1,9 @@
 from .sexagesimal import Sexagesimal
 
 class Program(object):
-    def __init__(self, blocks, colophon):
+    def __init__(self, blocks, colophon, verbose=False):
+        self.verbose = verbose
+
         self.registers = dict()
         self.lines = []
         self.line_lookup = dict()
@@ -34,7 +36,8 @@ class Program(object):
         line_number = 0
         while line_number < len(self.lines):
             stmt = self.lines[line_number]
-            print(f"Executing {line_number}: {stmt}")
+            if self.verbose:
+                print(f"Executing {line_number}: {stmt}")
             result = stmt.execute(self)
             if stmt.opcode == "𒇔𒈾": # Goto
                 result = self.dereference(result)
@@ -55,10 +58,11 @@ class Program(object):
                         dest = tuple(dest.digits)
                     self.registers[dest] = result
                 line_number += 1
-            print("Registers:")
-            for address, value in self.registers.items():
-                print(f"\t{address}: {value}")
-            print()
+            if self.verbose:
+                print("Registers:")
+                for address, value in self.registers.items():
+                    print(f"\t{address}: {value}")
+                print()
 
 class Statement(object):
     def __init__(self, args, opcode, destination, line_number):
