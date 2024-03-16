@@ -55,6 +55,9 @@ class Sexagesimal(object):
         while digits[-1][0] == 0 and digits[-1][1] < 0:
             digits = digits[:-1]
 
+        if digits[0][0] < 0:
+            raise Exception("Negative numbers have not been invented yet.")
+
         return digits
 
     def __gt__(self, other, idx=0):

@@ -2,9 +2,62 @@ from lark import Lark
 from lark import Transformer, Discard
 
 from .sexagesimal import Sexagesimal
+from .program import *
 
-# TODO accept both GESH2 and DISH?
 EmeszidaParser = Lark(r"""
+    ?tablet: "𒁾" "\n" block* colophon
+
+    block: stmt* "---" "\n"
+
+    stmt: args TAB+ OPCODE TAB+ destination TAB+ line_number "\n"
+
+    args: expr (DELIM? expr)*
+
+    destination: register
+                | number
+                | EMPTY_REGISTER
+    EMPTY_REGISTER: "𒋤"
+
+    expr: number
+         | register
+
+    number: (digits* FRAC)? digits+
+
+    register: "𒃻𒋃" number "𒄰"
+
+    OPCODE: "𒈭𒄩" // add
+          | "𒁀𒍣" // subtract
+          | "𒀀𒁺" // multiply
+          | "𒅆"  // reciprocal
+          | "𒈨"  // assign
+          | "𒋫𒈥" // print
+          | "𒇔𒈾" // goto
+          | "jz" // jz
+
+    line_number: number
+
+    // ?colophon: location copy_status authorship date WS*
+    // TODO: Are there stock phrases that should be used in the colophon?
+    colophon: "colophon" WS* // Placeholder
+
+    // Delimiters:
+
+    DELIM: _DELIM
+    _DELIM: "𒀀𒈾"
+          | "𒄿𒈾"
+          | "  "
+
+    TAB: "\t"
+       | "𒋰"
+
+    // Numerals:
+
+    digits: TENS ONES
+          | ONES
+          | TENS
+          | ZERO
+          | SPACE
+    
     TENS: /[𒌋𒎙𒌍𒐏𒐐]/
 
     ONES: /[𒐕𒐖𒐗𒐘𒐙𒐚𒐛𒐜𒐝]/
@@ -15,66 +68,42 @@ EmeszidaParser = Lark(r"""
 
     SPACE: " "
 
-    digits: TENS ONES
-          | ONES
-          | TENS
-          | ZERO
-          | SPACE
-    
-    number: (digits* FRAC)? digits+
-
-    ?expr: add
-         | sub
-         | mul
-         | recip
-         | number
-         | NAME
-         | function_call
-         | "(" expr ")"
-
-    add: expr "𒀀𒈾" expr "𒈭𒄩"
-
-    sub: expr "𒄿𒈾" expr "𒁀𒍣"
-
-    mul: expr "𒀀𒁺" expr
-
-    recip: "𒅆" expr
-
-    function_call: "𒍦" (expr "𒅇")* expr? "𒍧" NAME "do"
-
-
-    ?expression_stmt: expr
-
-    NAME: /[a-z]+/
-
-    assignment_stmt: NAME "=" expr
-
-    loop_stmt: "loop" block "until" expr
-
-    function_def_stmt: NAME "func" NAME* "take" block "def"
-
-    print_stmt: expr "print"
-
-
-    block: "𒍦" stmt* "𒍧"
-
-    ?stmts: stmt*
-
-    ?stmt: expression_stmt
-         | assignment_stmt
-         | loop_stmt
-         | function_def_stmt
-         | print_stmt
-
     %import common.WS
-    %ignore "  "
-
-    """, start='stmts', parser="lalr")
-
+    """, start='tablet', parser="lalr")
 
 class EmeszidaTransformer(Transformer):
-    def WS(self, _):
-        return Discard
+    def tablet(self, args):
+        blocks, colophon = args[:-1], args[-1]
+        return Program(blocks, colophon)
+
+    def block(self, stmts):
+        return stmts
+
+    def stmt(self, value):
+        (args, opcode, destination, line_number) = value
+        return Statement(args, opcode, destination, line_number)
+
+    def line_number(self, value):
+        (value,) = value
+        return value
+
+    def args(self, value):
+        return value
+
+    def destination(self, value):
+        (value,) = value
+        return value
+
+    def expr(self, value):
+        (value,) = value
+        return value
+
+    def register(self, value):
+        (value,) = value
+        return Register(tuple(value.digits))
+
+    def EMPTY_REGISTER(self, value):
+        return None
 
     def number(self, digits):
         try:
@@ -85,6 +114,12 @@ class EmeszidaTransformer(Transformer):
         exponents = [radix_point - idx - 1 for idx, digit in enumerate(digits)]
         value = Sexagesimal(list(zip(digits, exponents)))
         return value
+
+    def digits(self, digits):
+        if digits != []:
+            return sum(digits)
+        else:
+            return Discard
 
     def ZERO(self, _):
         return 0
@@ -128,43 +163,18 @@ class EmeszidaTransformer(Transformer):
 
     def SPACE(self, _):
         return Discard
+    
+    ############################
+    # Whitespace and delimiters:
 
-    def digits(self, digits):
-        if digits != []:
-            return sum(digits)
+    def TAB(self, _):
         return Discard
 
-    def add(self, terms):
-        a, b = terms
-        return a + b
-
-    def sub(self, terms):
-        a, b = terms
-        return b - a
-
-    def mul(self, terms):
-        a, b = terms
-        return a * b
-
-    def recip(self, term):
-        (term,) = term
-        return term.reciprocal()
-
-    def expr_(self, _):
-        (_,) = _
-        return _
-    def expr(self, _):
-        (_,) = _
-        return _
-
-    def NAME(self, _):
-        return _.value
-
-    #def assignment_stmt(self, stmt):
-        # TODO get current scope and store value
-        #variable, expr = stmt
-        #print(variable, expr)
-
-    #def print_stmt(self, expr):
-        #print(expr)
-
+    def WS(self, _):
+        return Discard
+    
+    def DELIM(self, _):
+        return Discard
+    
+    def _DELIM(self, _):
+        return Discard
