@@ -37,14 +37,12 @@ class Program(object):
             print(f"Executing {line_number}: {stmt}")
             result = stmt.execute(self)
             if stmt.opcode == "𒇔𒈾": # Goto
-                if isinstance(result, Register):
-                    result = self.dereference(result.address)
-                line_number = self.line_lookup[tuple(result.digits)]
+                result = self.dereference(result)
+                line_number = self.line_lookup[result]
             elif stmt.opcode == "jz": # jz
                 if result:
-                    if isinstance(result, Register):
-                        result = self.dereference(result.address)
-                    line_number = self.line_lookup[tuple(result.digits)]
+                    result = self.dereference(result)
+                    line_number = self.line_lookup[result]
                 else:
                     line_number += 1
             else:
