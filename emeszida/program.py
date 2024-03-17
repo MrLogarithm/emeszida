@@ -42,7 +42,7 @@ class Program(object):
             if stmt.opcode == "𒇔𒈾": # Goto
                 result = self.dereference(result)
                 line_number = self.line_lookup[result]
-            elif stmt.opcode == "jz": # jz
+            elif stmt.opcode in ["jz", "jgz"]: # jz, jgz
                 if result:
                     result = self.dereference(result)
                     if isinstance(result, Sexagesimal):
@@ -118,6 +118,13 @@ class Statement(object):
         assert len(arg) == 1
         (arg,) = arg
         return arg
+
+    def jgz(self, arg):
+        # Jump if greater than zero
+        assert len(arg) == 1
+        (arg,) = arg
+        if arg > Sexagesimal([(0,0)]):
+            return self.destination
 
     def jz(self, arg):
         # Jump if zero

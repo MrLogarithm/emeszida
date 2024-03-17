@@ -33,7 +33,8 @@ EmeszidaParser = Lark(r"""
           | "𒈨"  // assign
           | "𒋫𒈥" // print
           | "𒇔𒈾" // goto
-          | "jz" // jz
+          | "jgz" // jgz
+          | "jz"  // jz
 
     line_number: number
 
