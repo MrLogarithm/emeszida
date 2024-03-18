@@ -111,7 +111,7 @@ class Statement(object):
 
     def 𒋫𒈥(self, args):
         # Print
-        print("Print", *args)
+        print(*args)
 
     def 𒇔𒈾(self, arg):
         # Goto

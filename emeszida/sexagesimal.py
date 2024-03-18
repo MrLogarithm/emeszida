@@ -131,7 +131,7 @@ class Sexagesimal(object):
                 exponent -= 1
                 dividend = remainder
                 # TODO if we have already seen this remainder, break and autofill repeated digits
-            if exponent < -10:
+            if exponent < -20:
                 break
         return Sexagesimal(result, sign=self.sign)
 
@@ -188,7 +188,7 @@ class Sexagesimal(object):
         # (mantissa, exponent) representation:
         # return str(self.digits)
         # decimal representation:
-        # return str(sum(mantissa * 60**exponent for mantissa, exponent in self.digits))
+        conversion = str(sum(mantissa * 60**exponent for mantissa, exponent in self.digits))
         string = (
                 ','.join([
                     str(mantissa)
@@ -202,4 +202,5 @@ class Sexagesimal(object):
             ).rstrip(';')
         if self.sign == -1:
             string = f"-{string}"
-        return string
+            conversion = f"-{conversion}"
+        return f"Sexagesimal(\n\t{string},\n\t{conversion}\n)"
