@@ -43,7 +43,7 @@ class Program(object):
             if stmt.opcode == "𒇔𒈾": # Goto
                 result = self.dereference(result)
                 line_number = self.line_lookup[result]
-            elif stmt.opcode in ["jz", "jgz"]: # jz, jgz
+            elif stmt.opcode in ["𒋗𒌉𒁉𒋝", "𒋗𒌉𒁉𒋛𒀀"]: # jz, jgz
                 if result:
                     result = self.dereference(result)
                     if isinstance(result, Sexagesimal):
