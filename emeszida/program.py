@@ -1,5 +1,6 @@
 from .sexagesimal import Sexagesimal
 
+
 class Program(object):
     def __init__(self, blocks, colophon, verbose=False):
         self.verbose = verbose
@@ -64,6 +65,7 @@ class Program(object):
                     print(f"\t{address}: {value}")
                 print()
 
+
 class Statement(object):
     def __init__(self, args, opcode, destination, line_number):
         self.args = args
@@ -73,6 +75,7 @@ class Statement(object):
 
     def __repr__(self):
         return f"{self.opcode}({self.args}) -> {self.destination}"
+    
     def __str__(self):
         return f"LINE {self.line_number} | {self.opcode}({self.args}) => {self.destination}"
 
@@ -119,14 +122,14 @@ class Statement(object):
         (arg,) = arg
         return arg
 
-    def jgz(self, arg):
+    def 𒋗𒌉𒁉𒋛𒀀(self, arg):
         # Jump if greater than zero
         assert len(arg) == 1
         (arg,) = arg
         if arg > Sexagesimal([(0,0)]):
             return self.destination
 
-    def jz(self, arg):
+    def 𒋗𒌉𒁉𒋝(self, arg):
         # Jump if zero
         assert len(arg) == 1
         (arg,) = arg
@@ -150,6 +153,7 @@ class Register(object):
 
     def __repr__(self):
         return str(self)
+    
     def __str__(self):
         return f"Register{str(self.address)}"
 

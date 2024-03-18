@@ -33,8 +33,8 @@ EmeszidaParser = Lark(r"""
           | "𒈨"  // assign
           | "𒋫𒈥" // print
           | "𒇔𒈾" // goto
-          | "jgz" // jgz
-          | "jz"  // jz
+          | "𒋗𒌉𒁉𒋛𒀀" // tukum.bi dirig "if it exceeds"
+          | "𒋗𒌉𒁉𒋝"  // tukum.bi sig "it it is weak"
 
     line_number: number
 
@@ -72,6 +72,7 @@ EmeszidaParser = Lark(r"""
 
     %import common.WS
     """, start='tablet', parser="lalr")
+
 
 class EmeszidaTransformer(Transformer):
     def tablet(self, args):

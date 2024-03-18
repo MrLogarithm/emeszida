@@ -11,12 +11,12 @@
 𒃻𒋃𒐖𒄰𒀀𒈾𒐕			𒈭𒄩	𒃻𒋃𒐖𒄰	𒌋
 𒐕𒄿𒈾𒃻𒋃𒐗𒄰			𒁀𒍣	𒃻𒋃𒐗𒄰	𒌋
 # If vector is full, GOTO III
-𒃻𒋃𒐗𒄰			jz	𒐕𒐕𒐕		𒌋
+𒃻𒋃𒐗𒄰			𒋗𒌉𒁉𒋝	𒐕𒐕𒐕		𒌋
 # Else loop
 𒐕𒐕				𒇔𒈾	𒋤		𒌋
 ---
 # If vector B already full, GOTO IIII
-𒃻𒋃𒐘𒄰			jz	𒐕𒐕𒐕𒐕	𒐕𒐕𒐕
+𒃻𒋃𒐘𒄰			𒋗𒌉𒁉𒋝	𒐕𒐕𒐕𒐕	𒐕𒐕𒐕
 # Else define vector B: 4-13 in registers 𒐕𒋙𒐖 to 𒌋𒋙𒐖
 𒐕𒄿𒈾𒃻𒋃𒐘𒄰			𒁀𒍣	𒃻𒋃𒐘𒄰	𒌋
 𒐘				𒈨	𒃻𒋃𒐕𒄰	𒌋
@@ -52,7 +52,7 @@
 𒃻𒋃𒐖𒄰𒀀𒈾𒐕			𒈭𒄩	𒃻𒋃𒐖𒄰	𒌋
 𒃻𒋃𒐗𒄰𒀀𒈾𒐕			𒈭𒄩	𒃻𒋃𒐗𒄰	𒌋
 # Return if length counter is zero
-𒃻𒋃𒐘𒄰			jz	𒃻𒋃𒐕𒄰	𒌋
+𒃻𒋃𒐘𒄰			𒋗𒌉𒁉𒋝	𒃻𒋃𒐕𒄰	𒌋
 # Else loop
 𒐕𒐕𒐕𒐕𒐕𒐕			𒇔𒈾	𒋤		𒌋
 ---
