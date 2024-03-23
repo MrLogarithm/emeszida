@@ -38,6 +38,8 @@
 %additional package(s)
 \usepackage{graphicx}
 
+\usepackage{longtable}
+
 % If the title and author information does not fit in the area allocated, uncomment the following
 %
 %\setlength\titlebox{<dim>}
@@ -128,16 +130,88 @@ The native programming language used by the ancient Babylonian "cuneogrammers" u
 \section{Discovery}
 Museum of the Sealand
 
-\section{Technical Description}
-(of the Language)
+Unfortunately, the hardware required to execute these programs (i.e. a living Babylonian mathematician) has not been adequately preserved, but we have managed to write a Python library which emulates it.\footnote{\url{github.com/MrLogarithm/emeszida}}
 
 
-- compare the table of params at the end of the file to tables of astronomical parameters from genuine tablets
+\section{Description of the Language}
+Programs in \emeszida\ follow a tabular structure with three main sections: (i) a header, denoted by \texttt{dub} \textcuneiform{𒁾} (``tablet''), (ii) a sequence of instructions, and (iii) a colophon detailing the tablet's authorship.
+Each instruction spans four columns, which we have taken to calling the \textit{arguments}, \textit{opcode}, \textit{destination}, and \textit{line number}. 
+These columns are usually tab-separated, though in a few documents they are TAB-separated (using the cuneiform sign \texttt{TAB} \textcuneiform{𒋰}).
+Instructions are grouped into blocks by means of horizontal lines.
+
+\paragraph{Arguments}
+An instruction's arguments may be numbers, register addresses, or a combination of the two. Numbers are encoded following standard Babylonian conventions \cite{TODO}, with \textcuneiform{𒋙} denoting the radix point which separates the integer part from a following fraction. There is an explicit representation for zero (\textcuneiform{𒑱}), making these tablets some of the earliest unambigiuous examples of the mathematical concept of zero.
+
+A register address is denoted by the phrase niŋ$_2$.kas$_7$ $n$-kam \textcuneiform{𒃻𒋃}$n$\textcuneiform{𒄰} (``thing.account $n$-th'', ``the item in the $n$-th place''), where $n$ is any number. \textcuneiform{𒃻𒋃} expressions can be nested to perform a kind of pointer dereferencing: for example, if \textcuneiform{𒃻𒋃𒐕𒄰} (register 1) contains the value \textcuneiform{𒐗} (3), and \textcuneiform{𒃻𒋃𒐗𒄰} (register 3) contains the value \textcuneiform{𒐛} (7), then \textcuneiform{𒃻𒋃𒃻𒋃𒐕𒄰𒄰} will evaluate to 7 (the value in the register pointed to by \textcuneiform{𒃻𒋃𒐕𒄰}).
+
+If an instruction has multiple arguments, these must be delimited by a wide space (distinct from the short space used to separate groups of digits within a number), or by one of the phrases a.na \textcuneiform{𒀀𒈾} ``to'' or i.na \textcuneiform{𒄿𒈾} ``from''. By convention, the choice of delimiter depends on the instruction's opcode (see below), with multiplication operations preferring space delimiters, addition preferring \textcuneiform{𒀀𒈾}, and subtraction preferring \textcuneiform{𒄿𒈾}. 
+There is no mechanism to enforce these conventions, but we recommend following them because \emeszida\ is hard enough to read at the best of times.
+
+\paragraph{Destination}
+In most cases, the destination column of an instruction will be a register address where the output is to be stored, e.g. \textcuneiform{𒃻𒋃𒐕𒄰}. 
+Some control-flow instructions (see below) instead expect the destination to be a line number. 
+\textcuneiform{𒋤} SUD (``distant, remote'') can be used as a null destination, for statements which produce no output.
+
+\paragraph{Opcodes}
+Each instruction has a single opcode belonging to the following vocabulary:
+\begin{itemize}
+    \item \textcuneiform{𒈭𒄩} DAḪ.ḪA, ``add''
+    \item \textcuneiform{𒁀𒍣} BA.ZI, ``tear out''
+    \item \textcuneiform{𒀀𒁺} A.RA$_2$, ``multiply''
+    \item \textcuneiform{𒅆} IGI, ``reciprocal''
+    \item \textcuneiform{𒈨} ME, ``to be''
+    \item \textcuneiform{𒅆𒂃} \textit{ta-mar}, ``you will see''
+    \item \textcuneiform{𒇔𒈾} NIGIN.NA, ``start again''
+    \item \textcuneiform{𒋗𒌉𒁉𒋛𒀀} \textit{tukum.bi dirig}, ``if it exceeds''
+    \item \textcuneiform{𒋗𒌉𒁉𒋝}  \textit{tukum.bi sig}, ``it it is weak''
+\end{itemize}
+
+The first three of these are binary operators for addition, subtraction, and multiplication respectively. 
+The subtraction operator deserves special attention for its use in constructions of the following shape, which appear hundreds of times throughout the Babylonian programming corpus:
+
+\begin{center}
+    \textcuneiform{𒑱𒋙𒐖𒌍𒄿𒈾𒑱}\qquad\textcuneiform{𒁀𒍣}\qquad\textcuneiform{𒃻𒋃𒐕𒄰}\qquad\textcuneiform{𒑱}
+\end{center}
+
+This instruction subtracts \textcuneiform{𒑱𒋙𒐖𒌍} from zero and stores the result in \textcuneiform{𒃻𒋃𒐕𒄰}. 
+This effectively negates the first argument, and seems to have been the primary way by which Babylonian cuneigrammers represented negative numbers, as their primitive and archaic notation otherwise lacked a means to encode such values.
+This curious practice gives definitive proof that the invention of negative numbers occurred centuries earlier than previously believed.
+
+The language does not appear to have any kind of binary division operator. Rather, a unary \textcuneiform{𒅆} operator was used to find the reciprocal of the denominator, which was then multiplied by the numerator using the binary \textcuneiform{𒀀𒁺} operator.
+
+\textcuneiform{𒈨} is a unary assignment operator which stores a value in a destination register. \textcuneiform{𒅆𒂃} functions as a unary print operator.
+
+\emeszida\ includes three types of control-flow instructions. \textcuneiform{𒇔𒈾} functions like GOTO, and jumps the program counter to the specified line number. \textcuneiform{𒋗𒌉𒁉𒋝} functions like the x86 \texttt{jz} instruction, and jumps to the specified line number if and only if its argument is zero. \textcuneiform{𒋗𒌉𒁉𒋛𒀀} is similar, and jumps if the argument is greater than zero.
+
+\paragraph{Line Numbers}
+Every line of an \emeszida\ program ends in a mandatory line number. 
+However, these numbers are not generally sequential, and need not even be distinct. 
+For example, most lines of the perceptron tablet are labeled with the number \textcuneiform{𒑱} (zero); only lines that are the destination of some control-flow instruction receive non-zero identifiers. 
+
+\subsection{Fractional Indexing}
+Both line numbers and register addresses in \emeszida\ can have fractional parts.
+The original scribes seem to have exploited this fact to establish non-overlapping ``namespaces'' for the different parts of their code. 
+For example, in the perceptron tablet, all of the model parameters are stored in adresses with integer part 1; the program inputs all have integer part 2; the matrix multiplication subroutine uses addresses with integer part 3; and so on.
+The fractional parts of register addresses also appear to follow some standard conventions, with the X;0 register typically storing a subroutine's return address, while X;1 onward were used for its arguments.
+
+The perceptron tablet also uses fractional register addresses to perform a kind of multi-dimensional array indexing.
+As an example, the first layer of the perceptron has a $50\times 2$ weight matrix, and this is stored in registers 1;0,0,0 through 1;0,49,1. The integer part of these addresses denotes the ``data'' portion of memory; the first digit after the radix point identifies this as the 0th model parameter; and the second and third digits can be treated as a pair of indices ranging from 0--49 and 0--1 respectively.
+To access a specific element in this matrix, the scribes use repeated division by 60 to implement a kind of ``bit-shift'' instruction, in order to shift integer indices into the correct positions after the radix point. 
+By adding the bit-shifted element indices (e.g. 0;0,4,7 for the element in row 5, column 8) to a pointer to the top corner of the matrix (1;0,0,0) they obtain the address of the desired element (1;0,4,7).
+
+Notably, this practice limits the size of their model parameters to at most $60\times 60$, as for larger values the addresses would carry over to higher digits and thus begin to overwrite one another. 
+This limitation may explain why AI never made waves in Babylonian society, as their models were all too small to be truly revolutionary.
+
+
+\section{Description of the Texts}
+- add graph plotting perceptron output vs true trigonometric ratios from Plimpton
 
 \section{Implications}
 This completely rewrites the history of modern computing... 
 
 Other ancient corpora which have resisted decipherment, and which boast a similar numeric component, may represent additional examples of ancient programming traditions.
+
+- compare the table of params at the end of the file to tables of astronomical parameters from genuine tablets
 
 
 \section*{Acknowledgments}
@@ -149,6 +223,13 @@ Other ancient corpora which have resisted decipherment, and which boast a simila
 \section{Example Appendix}
 \label{sec:appendix}
 
-- reproduce entire perceptron-full.eme in the text, without comments
+- reproduce entire perceptron-full.eme in the text, without comments:
+
+\onecolumn
+\tiny
+\noindent
+\input{perceptron.tex}
+\normalsize
 
 \end{document}
+
