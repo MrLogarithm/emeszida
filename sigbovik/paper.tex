@@ -134,36 +134,36 @@ Unfortunately, the hardware required to execute these programs (i.e. a living Ba
 
 
 \section{Description of the Language}
-Programs in \emeszida\ follow a tabular structure with three main sections: (i) a header, denoted by \texttt{dub} \textcuneiform{𒁾} (``tablet''), (ii) a sequence of instructions, and (iii) a colophon detailing the tablet's authorship.
+Programs in \emeszida\ follow a tabular structure with three main sections: (i) a header, denoted by \textsc{dub} \textcuneiform{𒁾} (``tablet''), (ii) a sequence of instructions, and (iii) a colophon detailing the tablet's authorship.
 Each instruction spans four columns, which we have taken to calling the \textit{arguments}, \textit{opcode}, \textit{destination}, and \textit{line number}. 
-These columns are usually tab-separated, though in a few documents they are TAB-separated (using the cuneiform sign \texttt{TAB} \textcuneiform{𒋰}).
+These columns are usually tab-separated, though in a few documents they are TAB-separated (using the cuneiform sign \textsc{tab} \textcuneiform{𒋰}).
 Instructions are grouped into blocks by means of horizontal lines.
 
 \paragraph{Arguments}
 An instruction's arguments may be numbers, register addresses, or a combination of the two. Numbers are encoded following standard Babylonian conventions \cite{TODO}, with \textcuneiform{𒋙} denoting the radix point which separates the integer part from a following fraction. There is an explicit representation for zero (\textcuneiform{𒑱}), making these tablets some of the earliest unambigiuous examples of the mathematical concept of zero.
 
-A register address is denoted by the phrase niŋ$_2$.kas$_7$ $n$-kam \textcuneiform{𒃻𒋃}$n$\textcuneiform{𒄰} (``thing.account $n$-th'', ``the item in the $n$-th place''), where $n$ is any number. \textcuneiform{𒃻𒋃} expressions can be nested to perform a kind of pointer dereferencing: for example, if \textcuneiform{𒃻𒋃𒐕𒄰} (register 1) contains the value \textcuneiform{𒐗} (3), and \textcuneiform{𒃻𒋃𒐗𒄰} (register 3) contains the value \textcuneiform{𒐛} (7), then \textcuneiform{𒃻𒋃𒃻𒋃𒐕𒄰𒄰} will evaluate to 7 (the value in the register pointed to by \textcuneiform{𒃻𒋃𒐕𒄰}).
+A register address is denoted by the phrase \textsc{niŋ$_2$.kas$_7$} $n$-\textsc{kam} \textcuneiform{𒃻𒋃}$n$\textcuneiform{𒄰} (``thing.account $n$-th'', ``the item in the $n$-th place''), where $n$ is any number. \textcuneiform{𒃻𒋃} expressions can be nested to perform a kind of pointer dereferencing: for example, if \textcuneiform{𒃻𒋃𒐕𒄰} (register 1) contains the value \textcuneiform{𒐗} (3), and \textcuneiform{𒃻𒋃𒐗𒄰} (register 3) contains the value \textcuneiform{𒐛} (7), then \textcuneiform{𒃻𒋃𒃻𒋃𒐕𒄰𒄰} will evaluate to 7 (the value in the register pointed to by \textcuneiform{𒃻𒋃𒐕𒄰}).
 
-If an instruction has multiple arguments, these must be delimited by a wide space (distinct from the short space used to separate groups of digits within a number), or by one of the phrases a.na \textcuneiform{𒀀𒈾} ``to'' or i.na \textcuneiform{𒄿𒈾} ``from''. By convention, the choice of delimiter depends on the instruction's opcode (see below), with multiplication operations preferring space delimiters, addition preferring \textcuneiform{𒀀𒈾}, and subtraction preferring \textcuneiform{𒄿𒈾}. 
+If an instruction has multiple arguments, these must be delimited by a wide space (distinct from the short space used to separate groups of digits within a number), or by one of the phrases \textit{a-na} \textcuneiform{𒀀𒈾} ``to'' or \textit{i-na} \textcuneiform{𒄿𒈾} ``from''. By convention, the choice of delimiter depends on the instruction's opcode (see below), with multiplication operations preferring space delimiters, addition preferring \textcuneiform{𒀀𒈾}, and subtraction preferring \textcuneiform{𒄿𒈾}. 
 There is no mechanism to enforce these conventions, but we recommend following them because \emeszida\ is hard enough to read at the best of times.
 
 \paragraph{Destination}
 In most cases, the destination column of an instruction will be a register address where the output is to be stored, e.g. \textcuneiform{𒃻𒋃𒐕𒄰}. 
 Some control-flow instructions (see below) instead expect the destination to be a line number. 
-\textcuneiform{𒋤} SUD (``distant, remote'') can be used as a null destination, for statements which produce no output.
+\textcuneiform{𒋤} \textsc{sud} (``distant, remote'') can be used as a null destination, for statements which produce no output.
 
 \paragraph{Opcodes}
 Each instruction has a single opcode belonging to the following vocabulary:
 \begin{itemize}
-    \item \textcuneiform{𒈭𒄩} DAḪ.ḪA, ``add''
-    \item \textcuneiform{𒁀𒍣} BA.ZI, ``tear out''
-    \item \textcuneiform{𒀀𒁺} A.RA$_2$, ``multiply''
-    \item \textcuneiform{𒅆} IGI, ``reciprocal''
-    \item \textcuneiform{𒈨} ME, ``to be''
+    \item \textcuneiform{𒈭𒄩} \textsc{daḫ.ḫa}, ``add''
+    \item \textcuneiform{𒁀𒍣} \textsc{ba.zi}, ``tear out''
+    \item \textcuneiform{𒀀𒁺} \textsc{a.ra₂}, ``multiply''
+    \item \textcuneiform{𒅆} \textsc{igi}, ``reciprocal''
+    \item \textcuneiform{𒈨} \textsc{me}, ``to be''
     \item \textcuneiform{𒅆𒂃} \textit{ta-mar}, ``you will see''
-    \item \textcuneiform{𒇔𒈾} NIGIN.NA, ``start again''
-    \item \textcuneiform{𒋗𒌉𒁉𒋛𒀀} \textit{tukum.bi dirig}, ``if it exceeds''
-    \item \textcuneiform{𒋗𒌉𒁉𒋝}  \textit{tukum.bi sig}, ``it it is weak''
+    \item \textcuneiform{𒇔𒈾} \textsc{nigin.na}, ``start again''
+    \item \textcuneiform{𒋗𒌉𒁉𒋛𒀀} \textsc{tukum.bi dirig}, ``if it exceeds''
+    \item \textcuneiform{𒋗𒌉𒁉𒋝}  \textsc{tukum.bi sig}, ``if it it is weak''
 \end{itemize}
 
 The first three of these are binary operators for addition, subtraction, and multiplication respectively. 
