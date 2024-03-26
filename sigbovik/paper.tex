@@ -21,6 +21,18 @@
 \newfontface{\cuneiform}[Scale=MatchUppercase,Path=./font/]{NotoSansCuneiform-Regular.ttf}
 \DeclareTextFontCommand{\textcuneiform}{\cuneiform}
 
+% % Needed for cuneiform abstract
+% \newenvironment{cuneiformabstract}%
+% 		 {\centerline{\large\bf Cuneiform Abstract}%
+% 		  \begin{list}{}%
+% 		     {\setlength{\rightmargin}{0.6cm}%
+% 		      \setlength{\leftmargin}{0.6cm}}%
+% 		   \item[]\ignorespaces%
+% 		   \@setsize\normalsize{12pt}\xpt\@xpt
+% 		   }%
+% 		 {\unskip\end{list}}
+
+
 % This assumes your files are encoded as UTF8
 \usepackage[utf8]{inputenc}
 
@@ -121,6 +133,10 @@
 This paper announces the discovery of the use of neural nets almost 4,000 years before their use in the modern era.
 Newly discovered tablets preserve a perceptron used for calculating the numbers on Plimpton 322, the most important object in the history of mathematics.
 The native programming language used by the ancient Babylonian "cuneogrammers" uses sexagesimal numbering leading to some "weirdness".
+\end{abstract}
+
+\begin{abstract}[\cuneiform{𒉆𒆸}]
+test
 \end{abstract}
 
 \section{Introduction}
