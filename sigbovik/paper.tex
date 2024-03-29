@@ -253,14 +253,20 @@ Notably, this practice limits the size of their model parameters to at most $60\
 This limitation may explain why AI never made waves in Babylonian society, as their models were all too small to be truly revolutionary.
 
 \section{Description of the Texts}
+<<<<<<< HEAD
 This corpus contains numerous fragments implementing recognizable procedures such as bit-shifting, populating an array, computing dot products, and so on. 
 However, only a single text is known to have been preserved in its entirety.\footnote{All of the known texts are reproduced in \url{github.com/MrLogarithm/emeszida/tree/main/programs}}
+=======
+The Sealand corpus contains numerous fragments implementing recognizable procedures such as bit-shifting, populating an array, computing dot products, and so on. 
+However, only a single text is known to have been preserved in its entirety.\footnote{All of the known texts are reproduced in \url{github.com/MrLogarithm/emeszida/tree/main/programs}, and the long text is reproduced in facsimile in the appendix of this work.}
+>>>>>>> refs/remotes/origin/main
 Spanning close to 1700 lines, this impressive text is divided into five sections implementing what modern readers will immediately recognize to be a multi-layer perception.
 The first section straightforwadly defines a matrix-multiplication subroutine. 
 This is called by a subroutine defined in section two, which applies each layer of the perceptron to a given input, and applies a ReLU-style activation between each pair of layers.
 Section three implements the tablet's ``main'' method, which loads an input to memory, calls the perceptron subroutine, and prints the resulting output.
 Section four loads the model parameters, which appear to comprise weight matrices of sizes $50\times 2$, $25\times 50$, and $1\times 25$, plus bias vectors of sizes $50$, $25$, and $1$ respectively.
 The final section lists pairs of inputs, whose values (incredibly!) correspond to the second and third columns of Plimpton 322.
+Interestingly, this section very closely resembles the tables of parameters found in later astronomical calculations (see Figure \ref{fig:BM_34580}).
 
 When the program is executed, it produces a single numeric output for each input pair. 
 These outputs correspond remarkably closely to the values in the first column of Plimpton 322, as demonstrated in Figure~\ref{fig:graph}.
@@ -269,7 +275,10 @@ This implies that, although the code on this tablet is clearly \textit{related} 
 Perhaps the outputs from this model were refined in some later step to produce the more exact ratios in the Plimpton text, or perhaps the Babylonians were disillusioned by the imprecision of their machine learning models and simply abandoned them for tried-and-true manual methods. 
 Given how miniscule the cuneigramming corpus is relative to the larger body of Babylonian administrative writing, we lean towards the latter explanation.
 
-\begin{figure}
+
+%It is clear that the cuneogrammers were slowly developing their skills as some of the earlier and simpler methods date as far back as the Old Akkadian period (c. 2300--2150 BCE) while the perceptron tablet is from the Old Babylonian period (c. 1900--1600 BCE).
+
+\begin{figure}\label{fig:graph}
     \includegraphics[width=0.5\textwidth]{graph.png}
     \caption{Outputs from the perceptron tablet vs.\ true value of each line from column 1 of Plimpton 322. If a points falls upon the line, the model output for that line exactly equals the value on Plimpton 322.}
     \label{fig:graph}
@@ -280,6 +289,7 @@ Simple array operations as well as the calculation of the dot product are includ
 All of this comes together in the large perceptron tablet.
 It is clear that the cuneogrammers were slowly developing their skills as some of the earlier and simpler methods date as far back as the Old Akkadian period (c. 2300--2150 BCE) while the perceptron tablet is from the Old Babylonian period (c. 1900--1600 BCE).
 Interestingly, the long weights at the end of the tablet very closely resemble the parameters of later astronomical calculations (see Figure \ref{fig:BM_34580}).
+
 
 \section{Implications}
 This completely rewrites the history of modern computing... 
