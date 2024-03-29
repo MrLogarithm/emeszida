@@ -52,8 +52,6 @@
 
 \usepackage{longtable}
 
-\usepackage{soul}
-
 % \setmainfont[Ligatures=TeX]{Times New Roman}
 \newfontfamily\arabicfont
     [Script=Arabic,     % to get correct arabic shaping
@@ -182,7 +180,7 @@ These columns are usually tab-separated, though in a few documents they are TAB-
 Instructions are grouped into blocks by means of horizontal lines.
 
 \paragraph{Arguments}
-An instruction's arguments may be numbers, register addresses, or a combination of the two. Numbers are encoded following standard Babylonian conventions \cite{TODO}, with \textcuneiform{𒋙} denoting the radix point which separates the integer part from a following fraction. There is an explicit representation for zero (\textcuneiform{𒑱}), making these tablets some of the earliest unambigiuous examples of the mathematical concept of zero.
+An instruction's arguments may be numbers, register addresses, or a combination of the two. Numbers are encoded following standard Babylonian conventions, with \textcuneiform{𒋙} denoting the radix point which separates the integer part from a following fraction. There is an explicit representation for zero (\textcuneiform{𒑱}), making these tablets some of the earliest unambigiuous examples of the mathematical concept of zero.
 
 A register address is denoted by the phrase \textsc{niŋ$_2$.kas$_7$} $n$-\textsc{kam} \textcuneiform{𒃻𒋃}$n$\textcuneiform{𒄰} (``thing.account $n$-th'', ``the item in the $n$-th place''), where $n$ is any number. \textcuneiform{𒃻𒋃} expressions can be nested to perform a kind of pointer dereferencing: for example, if \textcuneiform{𒃻𒋃𒐕𒄰} (register 1) contains the value \textcuneiform{𒐗} (3), and \textcuneiform{𒃻𒋃𒐗𒄰} (register 3) contains the value \textcuneiform{𒐛} (7), then \textcuneiform{𒃻𒋃𒃻𒋃𒐕𒄰𒄰} will evaluate to 7 (the value in the register pointed to by \textcuneiform{𒃻𒋃𒐕𒄰}).
 
@@ -253,7 +251,7 @@ Notably, this practice limits the size of their model parameters to at most $60\
 This limitation may explain why AI never made waves in Babylonian society, as their models were all too small to be truly revolutionary.
 
 \section{Description of the Texts}
-The Sealand corpus contains numerous fragments implementing recognizable procedures such as bit-shifting, populating an array, computing dot products, and so on. 
+The cuneogramming corpus contains numerous fragments implementing recognizable procedures such as bit-shifting, populating an array, computing dot products, and so on. 
 However, only a single text is known to have been preserved in its entirety.\footnote{All of the known texts are reproduced in \url{github.com/MrLogarithm/emeszida/tree/main/programs}, and the long text is reproduced in facsimile in the appendix of this work.}
 Spanning close to 1700 lines, this impressive text is divided into five sections implementing what modern readers will immediately recognize to be a multi-layer perception.
 The first section straightforwadly defines a matrix-multiplication subroutine. 
@@ -276,10 +274,7 @@ Given how miniscule the cuneogramming corpus is relative to the larger body of B
     \label{fig:graph}
 \end{figure}
 
-The tablets preserve a number of methods for performing simple neural network calculations.
-Simple array operations as well as the calculation of the dot product are included in the corpus.
-All of this comes together in the large perceptron tablet.
-It is clear that the cuneogrammers were slowly developing their skills as some of the earlier and simpler methods date as far back as the Old Akkadian period (c. 2300--2150 BCE) while the perceptron tablet is from the Old Babylonian period (c. 1900--1600 BCE).
+%It is clear that the cuneogrammers were slowly developing their skills as some of the earlier and simpler methods date as far back as the Old Akkadian period (c. 2300--2150 BCE) while the perceptron tablet is from the Old Babylonian period (c. 1900--1600 BCE).
 
 \section{Implications and Future Work}
 This completely rewrites the history of modern computing and artificial intelligence.
@@ -296,8 +291,10 @@ The search for these tablets and our effort to understand them was inspired by R
 
 \appendix
 
-\section{Example Appendix}
+\section{Appendix}
 \label{sec:appendix}
+
+The following pages reproduce the perceptron tablet in its entirety.
 
 \onecolumn
 \tiny
