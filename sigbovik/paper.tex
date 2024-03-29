@@ -149,7 +149,7 @@
 \begin{abstract}
 This paper announces the discovery of the use of neural nets almost 4,000 years before their use in the modern era.
 Newly discovered tablets preserve a perceptron used for calculating the numbers on Plimpton 322, the most important object in the history of mathematics.
-The native programming language used by the ancient Babylonian "cuneogrammers" uses sexagesimal numbering leading to some "weirdness".
+The native programming language used by the ancient Babylonian ``cuneogrammers'' uses sexagesimal numbering leading to some ``weirdness''.
 \end{abstract}
 
 \begin{abstract}[\cuneiform{𒉆𒆸}]
@@ -166,14 +166,14 @@ The history of math is long, but the history of programming is longer.
 Cuneiform, arguably the first writing in the world, is known for its sheep receipts and beer ration lists as well as complaints about substandard copper \cite{oppenheim1954} and women complaining at each other \cite{Matuszak2020}.
 This article adds neural network programming to that vaunted list of human achievements.
 A set of newly discovered cuneiform tablets preserve the mechanism for performing simple neural network calculations.
-These methods, it seems, were used to calculate the lengths of triangles; a well known exercise preserved on the tablet known as Plimpton 322\footnote{And important and real introduction into this interesting object is found in \citet{robson2002}.}.
+These methods, it seems, were used to calculate the lengths of triangles; a well known example of this exercise is preserved on the tablet known as Plimpton 322\footnote{An important and real description of this interesting object is found in \citet{robson2002}.}.
 It is remarkable that no historian of math or cuneiform scholar has ever consider this possibility.
 This paper covers the background, a description of the cuneogramming language, and includes a facsimile copy of the most important tablet as an appendix.
 
 Unfortunately, the hardware required to execute these programs (i.e. a living Babylonian mathematician) has not been adequately preserved, but we have managed to write a Python library which emulates it.\footnote{\url{github.com/MrLogarithm/emeszida}}
 The assumption is that these calculations were done by hand in their copious free time between inventing the wheel and the concept of zero.
 While the actual output of these tablets is relatively simple by modern standards, the implications of this discovery are profound.
-Future work will explore how these techniques could have been used in the realm of astronomical calculation and elucidate the full extent of the Babylonian's computational prowess.
+Future work will explore how these techniques could have been used in the realm of astronomical calculation and elucidate the full extent of Babylonian computational prowess.
 
 \section{Description of the Language}
 Programs in \emeszida\ (\textsc{eme.šid.a} "language of counting") follow a tabular structure with three main sections: (i) a header, denoted by \textcuneiform{𒁾} (\textsc{dub}  "tablet"), (ii) a sequence of instructions, and (iii) a colophon detailing the tablet's authorship.
@@ -219,19 +219,19 @@ This instruction subtracts \textcuneiform{𒑱𒋙𒐖𒌍} from zero and stores
 This effectively negates the first argument, and seems to have been the primary way by which Babylonian cuneigrammers represented negative numbers, as their primitive and archaic notation otherwise lacked a means to encode such values.
 This curious practice gives definitive proof that the invention of negative numbers occurred centuries earlier than previously believed.
 
-% Added here to end up on next page
-\begin{figure*}
-  \centering
-  \includegraphics[width=\textwidth]{BM_34580.jpg}
-  \caption{BM 34580, courtesy of the Trustees of the British Museum, CC BY-NC-SA 4.0}
-  \label{fig:BM_34580}
-\end{figure*}
-
 The language does not appear to have any kind of binary division operator. Rather, a unary \textcuneiform{𒅆} operator was used to find the reciprocal of the denominator, which was then multiplied by the numerator using the binary \textcuneiform{𒀀𒁺} operator.
 
 \textcuneiform{𒈨} is a unary assignment operator which stores a value in a destination register. \textcuneiform{𒅆𒂃} functions as a unary print operator.
 
 \emeszida\ includes three types of control-flow instructions. \textcuneiform{𒇔𒈾} functions like GOTO, and jumps the program counter to the specified line number. \textcuneiform{𒋗𒌉𒁉𒋝} functions like the x86 \texttt{jz} instruction, and jumps to the specified line number if and only if its argument is zero. \textcuneiform{𒋗𒌉𒁉𒋛𒀀} is similar, and jumps if the argument is greater than zero.
+
+% Added here to end up on next page
+\begin{figure*}
+    \centering
+    \includegraphics[width=\textwidth]{BM_34580.jpg}
+    \caption{BM 34580, courtesy of the Trustees of the British Museum, CC BY-NC-SA 4.0}
+    \label{fig:BM_34580}
+  \end{figure*}
 
 \paragraph{Line Numbers}
 Every line of an \emeszida\ program ends in a mandatory line number. 
@@ -253,7 +253,7 @@ Notably, this practice limits the size of their model parameters to at most $60\
 This limitation may explain why AI never made waves in Babylonian society, as their models were all too small to be truly revolutionary.
 
 \section{Description of the Texts}
-The Sealand corpus contains numerous fragments implementing recognizable procedures such as bit-shifting, populating an array, computing dot products, and so on. 
+This corpus contains numerous fragments implementing recognizable procedures such as bit-shifting, populating an array, computing dot products, and so on. 
 However, only a single text is known to have been preserved in its entirety.\footnote{All of the known texts are reproduced in \url{github.com/MrLogarithm/emeszida/tree/main/programs}}
 Spanning close to 1700 lines, this impressive text is divided into five sections implementing what modern readers will immediately recognize to be a multi-layer perception.
 The first section straightforwadly defines a matrix-multiplication subroutine. 
@@ -269,16 +269,16 @@ This implies that, although the code on this tablet is clearly \textit{related} 
 Perhaps the outputs from this model were refined in some later step to produce the more exact ratios in the Plimpton text, or perhaps the Babylonians were disillusioned by the imprecision of their machine learning models and simply abandoned them for tried-and-true manual methods. 
 Given how miniscule the cuneigramming corpus is relative to the larger body of Babylonian administrative writing, we lean towards the latter explanation.
 
-\begin{figure}\label{fig:graph}
+\begin{figure}
     \includegraphics[width=0.5\textwidth]{graph.png}
     \caption{Outputs from the perceptron tablet vs.\ true value of each line from column 1 of Plimpton 322. If a points falls upon the line, the model output for that line exactly equals the value on Plimpton 322.}
+    \label{fig:graph}
 \end{figure}
 
 The tablets preserve a number of methods for performing simple neural network calculations.
 Simple array operations as well as the calculation of the dot product are included in the corpus.
 All of this comes together in the large perceptron tablet.
 It is clear that the cuneogrammers were slowly developing their skills as some of the earlier and simpler methods date as far back as the Old Akkadian period (c. 2300--2150 BCE) while the perceptron tablet is from the Old Babylonian period (c. 1900--1600 BCE).
-The longest tablet, included in the appendix, \hl{shows a fully featured perceptron ADD MORE HERE}
 Interestingly, the long weights at the end of the tablet very closely resemble the parameters of later astronomical calculations (see Figure \ref{fig:BM_34580}).
 
 \section{Implications}
