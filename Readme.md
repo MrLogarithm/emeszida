@@ -1,6 +1,6 @@
 # 𒅴𒋃𒀀 (emešida) - "language of counting"
 
-This project is an attempt to write a programming language using Sumerian cuneiform as defined in the Unicode standard [cuneiform codeblock](https://en.wikipedia.org/wiki/Cuneiform_(Unicode_block\)).
+This project is an attempt to write a programming language using Sumerian cuneiform as defined in the Unicode standard [cuneiform codeblock](https://en.wikipedia.org/wiki/Cuneiform_(Unicode_block)).
 It is of course, (almost) completely useless but serves as an interesting thought experiment, and an opportunity to learn more about the fascinating history of the ancient Near East, in particular the cuneiform writing system and its associated languages (Sumerian, Akkadian, etc.).
 We submitted it to [Sigbovik](https://sigbovik.org/) in 2023 as a farticle (farsicle-article).
 
